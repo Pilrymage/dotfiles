@@ -1,6 +1,0 @@
-# key: SPC n e J
-# name: new_headline
-# --
-* LOOP $1
-Created: `(format-time-string "[%Y-%m-%d %H:%M:%S]")`
-

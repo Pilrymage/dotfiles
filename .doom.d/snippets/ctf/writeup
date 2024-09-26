@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# name: writeup
-# uuid: 
-# key: writeup
-# condition: t
-# --
-
-题干、树状文件目录、解
-* $0  :$1:$2:
