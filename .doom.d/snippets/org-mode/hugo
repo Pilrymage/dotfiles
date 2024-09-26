@@ -1,7 +1,0 @@
-# key: hugo
-# name: hugo
-# --
-* TODO $1 :$2:
-:PROPERTIES:
-:EXPORT_FILE_NAME: ${1:$(replace-regexp-in-string " " "-" (downcase yas-text))}
-:END:
