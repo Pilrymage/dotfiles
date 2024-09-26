@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: kek
+# uuid: 123
+# key: kek
+# condition: t
+# --
+$0 is $1,
+$1 is $2,
+$2 is still $0.

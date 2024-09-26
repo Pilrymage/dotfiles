@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: economists
+# key: ec
+# --
+
+* `(format-time-string "W%W")` $1
+** The world this week
+** Leader

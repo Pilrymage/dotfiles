@@ -1,0 +1,14 @@
+# key: ct
+# name: org contacts
+# --
+* $1
+:PROPERTIES:
+:ADDRESS:
+:BIRTHDAY:
+:EMAIL:
+:ID:
+:PHONE:
+:QQ:
+:SCHOOLID:
+:NOTE:
+:END:

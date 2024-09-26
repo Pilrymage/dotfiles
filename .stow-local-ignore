@@ -1,0 +1,12 @@
+\.git
+\.site
+\.build.yml
+\.files
+\.archive
+backgrounds
+pilrymage
+mail
+fonts
+^/.*\.org
+LICENSE
+

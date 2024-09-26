@@ -1,0 +1,118 @@
+#!/bin/bash
+# 所有别名
+
+# 爬梯
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# md5
+alias md5='md5sum'
+
+# sudo 空格
+alias sudo='sudo '
+
+# doas 指令默认用 root
+alias doas="doas --"
+
+# vim 与 emacs
+alias vim="nvim"
+alias em="emacs -nw"            # 不用 GUI 界面
+alias emacsc="emacsclient -c -a 'emacs'" # 客户端连接
+
+# ls 替换为 eza
+alias ls='eza -al --color=always --group-directories-first' # 全部表示
+alias la='eza -a --color=always --group-directories-first'  # 所有目录
+alias ll='eza -l --color=always --group-directories-first'  # 长格式
+alias lt='eza -aT --color=always --group-directories-first' # 时间排序
+alias l.='eza -a | egrep "^\."'                             # 所有 . 打头的
+
+# guix 简写
+alias gp='guix package'
+alias gpr='guix package --roll-back'
+alias gpl='guix package --list-profiles'
+alias gpx='guix package --export-manifest'
+alias gpxc='guix package --export-channels'
+alias gd='guix describe'
+alias gsc='guix shell --container'
+
+# grep 带颜色输出
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+
+# 所有覆盖操作都应先确认
+alias cp="cp -i"
+alias mv='mv -i'
+alias rm='rm -i'
+
+# 添加选项
+alias df='df -h'                # 默认人类可读格式
+alias free='free -m'                      # 单位：MB
+alias lynx='lynx -cfg=~/.lynx/lynx.cfg -lss=~/.lynx/lynx.lss -vikeys'
+alias vifm='./.config/vifm/scripts/vifmrun'
+alias ncmpcpp='ncmpcpp ncmpcpp_directory=$HOME/.config/ncmpcpp/'
+alias mocp='mocp -M "$XDG_CONFIG_HOME"/moc -O MOCDir="$XDG_CONFIG_HOME"/moc'
+alias sdu='systemctl --user'
+
+# ps
+alias psa="ps auxf"
+alias psgrep="ps aux | grep -v grep | grep -i -e VSZ -e"
+alias psmem='ps auxf | sort -nr -k 4'
+alias pscpu='ps auxf | sort -nr -k 3'
+
+# git
+alias addup='git add -u'
+alias addall='git add .'
+alias branch='git branch'
+alias checkout='git checkout'
+alias clone='git clone'
+alias commit='git commit -m'
+alias fetch='git fetch'
+alias pull='git pull origin'
+alias push='git push origin'
+alias stat='git status'  # 'status' 己被使用
+alias tag='git tag'
+alias newtag='git tag -a'
+
+# gpg 加密
+# verify signature for isos
+alias gpg-check="gpg2 --keyserver-options auto-key-retrieve --verify"
+# receive the key of a developer
+alias gpg-retrieve="gpg2 --keyserver-options auto-key-retrieve --receive-keys"
+
+# 切换默认shell
+alias tobash="sudo chsh $USER -s /bin/bash && echo 'Now log out.'"
+alias tozsh="sudo chsh $USER -s /bin/zsh && echo 'Now log out.'"
+alias tofish="sudo chsh $USER -s /bin/fish && echo 'Now log out.'"
+
+# 重新链接 .dotfiles 里的软链接
+alias config="pushd $HOME/.dotfiles; stow .; popd"
+
+# termbin
+alias tb="nc termbin.com 9999"
+
+# rickroll放送
+alias rickroll='curl -s -L https://raw.githubusercontent.com/keroserene/rickrollrc/master/roll.sh | bash'
+
+# 查看外部 ip
+alias showip='curl ifconfig.me'
+
+# man 速查
+alias ascii='man ascii'
+alias hier='man hier'
+
+# 关掉 shell 而保留所有子进程
+alias keep='disown -a && exit'
+
+# 显示常用的十个命令
+alias often="history | awk '{a[\$2]++}END{for(i in a){print a[i] \" \" i}}\' | sort -rn | head"
+
+# 查看系统的发行版
+alias neo='cat /etc/issue'
+
+# 当前目录下最大的文件
+alias big='du -s * | sort -n | tail'
+
+# 天气预报
+alias weather='curl wttr.in/guangzhou'

@@ -1,0 +1,5 @@
+setup-info-locations: ["https://mirrors.tuna.tsinghua.edu.cn/stackage/stack-setup.yaml"]
+urls:
+  latest-snapshot: https://mirrors.tuna.tsinghua.edu.cn/stackage/snapshots.json
+
+snapshot-location-base: https://mirrors.tuna.tsinghua.edu.cn/stackage/stackage-snapshots/

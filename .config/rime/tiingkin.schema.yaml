@@ -1,0 +1,145 @@
+# Rime schema
+# encoding: utf-8
+
+schema:
+  name: 𡦂喃㗂京中國
+  schema_id: tiingkin
+  version: "2023.06.13"
+  author:
+    - hulenkius <hulenkius@gmail.com>
+    - Keepout2010 <Keepout2010@163.com>
+  description: |
+    《中國京語詞典》字頭發音轉寫輸入
+    需要 Nom Na Tong 字體私用區支持
+    聲調用 telex 寫法，可省略
+    長音雙寫
+    ɛ>ee　ɔ>oo　ɔː >ooo
+    ɯ>w　ə>y　ɤ>v
+    ɣ>ɡ　ŋ>ng　ʔ>x
+    ȵ>nh　ɬ>lh
+  dependencies:
+    - cangjie5
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]
+  - name: full_shape
+    states: [ 半角, 全角 ]
+  - name: ascii_punct
+    states: [ 。，, ．， ]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - r10n_translator
+    - reverse_lookup_translator
+  filters:
+    - uniquifier
+
+speller:
+  alphabet: zyxwvutsrqponmlkjihgfedcba
+  delimiter: " '"
+  algebra:
+    - xform/(\*).+$//
+    # 容錯
+    - derive/k/c/
+    - derive/ts/z/
+    - derive/kW/cw/
+    - derive/kW/cu/
+    - derive/W/w/
+    - derive/W/u/
+    - derive/b/xb/
+    - derive/d/xd/
+    - derive/d/dd/
+    - derive/i/j/
+    - derive/j/i/
+    - derive/hw/wh/
+    - derive/ooo/oooo/
+    - derive/nh/nj/
+    - xform/^ng/NG/
+    - derive/ng/g/
+    - xform/NG/ng/
+    # 省略喉塞
+    - derive/^x//
+    # 省略聲調
+    - derive/1//
+    - derive/2//
+    - derive/3//
+    - derive/5//
+    - derive/6//
+    - derive/7//
+    - derive/8//
+    # telex 聲調轉寫
+    - derive/1/z/
+    - derive/2/f/
+    - derive/3/r/
+    - derive/3/x/
+    - derive/5/s/
+    - derive/6/j/
+    - derive/7/s/
+    - derive/\’//
+    - derive/8/j/
+
+translator:
+  dictionary: tiingkin
+  prism: tiingkin
+  spelling_hints: 1
+  enable_completion: true
+  preedit_format:
+    - xform/(\*).+$//
+  comment_format:
+    - xform/^(.*)$/‹$1›
+    - xform/((\*).+)›/›\ $1/
+    - xform/\*//
+    # 省略喉塞
+    - xform/‹x/‹/
+    # 轉寫聲調
+    - xform/1/ᶻ/
+    - xform/2/ᶠ/
+    - xform/3/ʳ/
+    - xform/5/ˢ/
+    - xform/6/ʲ/
+    - xform/7/ˢ/
+    - xform/8/ʲ/
+    - xform/\’//
+    # 配合容錯
+    - xform/W/w/
+    
+reverse_lookup:
+  dictionary: cangjie5
+  enable_completion: true
+  prefix: "`"
+  suffix: "'"
+  tips: 〔倉頡〕
+  preedit_format:
+    - "xlit|abcdefghijklmnopqrstuvwxyz|日月金木水火土竹戈十大中一弓人心手口尸廿山女田難卜符|"
+  comment_format:
+    - xform/^(.*)$/$1
+    - xform/((\*).+)/$1/
+  
+punctuator:
+  import_preset: default
+
+key_binder:
+  import_preset: default
+
+recognizer:
+  import_preset: default
+  patterns:
+    reverse_lookup: "`[a-z]*'?$"

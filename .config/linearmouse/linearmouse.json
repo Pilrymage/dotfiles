@@ -1,0 +1,38 @@
+{
+  "$schema" : "https:\/\/schema.linearmouse.app\/0.9.5",
+  "schemes" : [
+    {
+      "pointer" : {
+        "acceleration" : 0.6875,
+        "speed" : 0.0689655172413792768,
+        "disableAcceleration" : false
+      },
+      "if" : {
+        "device" : {
+          "productName" : "Magic Trackpad 2",
+          "serialNumber" : "Voodoo Magic Trackpad 2 Simulator",
+          "productID" : "0x272",
+          "category" : "trackpad",
+          "vendorID" : "0x5ac"
+        }
+      }
+    },
+    {
+      "pointer" : {
+        "acceleration" : 0.6875,
+        "speed" : 0.0689655172413792768,
+        "disableAcceleration" : false
+      },
+      "if" : {
+        "app" : "org.mozilla.firefox",
+        "device" : {
+          "productName" : "Magic Trackpad 2",
+          "serialNumber" : "Voodoo Magic Trackpad 2 Simulator",
+          "productID" : "0x272",
+          "category" : "trackpad",
+          "vendorID" : "0x5ac"
+        }
+      }
+    }
+  ]
+}
