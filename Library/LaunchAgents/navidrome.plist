@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>Label</key>
+        <string>navidrome</string>
+        <key>ProgramArguments</key>
+        <array>
+            <string>/opt/navidrome/navidrome</string>
+            <string>-c</string>
+            <string>/Users/pilrymage/.config/navidrome/navidrome.toml</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>StandardOutPath</key>
+        <string>/opt/navidrome/navidrome.log</string>
+        <key>StandardErrorPath</key>
+        <string>/opt/navidrome/navidrome.log</string>
+    </dict>
+</plist>

@@ -1,0 +1,31 @@
+# key: wp
+# name: writeup
+# --
+* $1 :$2:$3:
+
+题干：
+#+name: $1-题干
+#+begin_example
+
+#+end_example
+
+文件结构：
+#+name: $1-文件结构
+#+begin_example
+
+#+end_example
+
+代码：
+#+name: $1-关键代码
+#+begin_src
+
+#+end_src
+
+
+** 解
+
+Flag:
+#+name: $1-flag
+#+begin_example
+
+#+end_example

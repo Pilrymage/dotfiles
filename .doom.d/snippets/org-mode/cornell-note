@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: cornell-note
+# key: co
+# --
+
+* $1 :::
+:PROPERTIES:
+:ID: `(format-time-string "%s%N")`
+:END:
+** content
+** summary

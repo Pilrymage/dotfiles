@@ -1,0 +1,14 @@
+* Pilrymage 的个人配置
+
+使用 GNU Stow 启动，个人的 Linux 配置。
+参考：[[https://github.com/daviwil/dotfiles][daviwil]]。
+
+* 使用方法
+#+begin_src bash
+$ git clone https://github.com/Pilrymage/dotfiles .dotfiles
+$ cd .dotfiles
+$ stow .
+#+end_src
+* 内容
+1. 大部分程序的仅大陆镜像配置
+2. 小部分作为个人配置存在

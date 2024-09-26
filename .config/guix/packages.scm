@@ -1,0 +1,18 @@
+(specifications->manifest
+  '(
+    "stow"
+    "neovim"
+    "emacs"
+    "cmake"
+    "make"
+    "hello"
+    "font-lxgw-wenkai"
+    "font-iosevka-term"
+    "tealdeer"
+    "fontconfig"
+    "neofetch"
+    "glibc-locales"
+    "graphviz"
+    "git"
+    "git:gui")
+  )
