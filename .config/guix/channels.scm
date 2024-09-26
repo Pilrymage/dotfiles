@@ -24,26 +24,4 @@
         (make-channel-introduction
          "993d200265630e9c408028a022f32f34acacdf29"
          (openpgp-fingerprint
-          "7EBE A494 60CE 5E2C 0875  7FDB 3B5A A993 E1A2 DFF0"))))
-      (channel
-       (name 'giuliano108-guix-packages)
-       (url "https://github.com/giuliano108/guix-packages")
-       (branch "master"))
-      (channel
-       (name 'nebula)
-       (url "https://git.sr.ht/~apoorv569/nebula")
-       (branch "master")
-       (introduction
-        (make-channel-introduction
-         "2f1be757b40f78456220823b71aace5277c5f33d"
-         (openpgp-fingerprint
-          "53B4 8418 D76A 3EF1 1BCC  92A8 4FDB 05CF 5D67 6283"))))
-      (channel
-       (name 'emacs)
-       (url "https://github.com/babariviere/guix-emacs")
-       (branch "master")
-       (introduction
-        (make-channel-introduction
-         "72ca4ef5b572fea10a4589c37264fa35d4564783"
-         (openpgp-fingerprint
-          "261C A284 3452 FB01 F6DF  6CF4 F9B7 864F 2AB4 6F18")))))
+          "7EBE A494 60CE 5E2C 0875  7FDB 3B5A A993 E1A2 DFF0")))))
