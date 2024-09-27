@@ -1,6 +1,7 @@
 # -*- mode: gitignore; -*-
 
-elpa/
-eln-cache/
-eshell/history
-eshell/lastdir
+/*
+!/rime/
+!*.el
+!/yasnippet/
+!/cnfonts/
