@@ -13,32 +13,6 @@
 ; OBS 配置是什么
 .files/.config/obs-studio
 
-; 字体
-fonts/.uuid
-fonts/opentype/.uuid
-fonts/truetype/.uuid
-
 ; 背景
 backgrounds
 
-; Rime 建议忽略
-.DS_Store
-**/.idea/
-.vscode/
-dist/
-
-**/build/
-**/sync/
-*.userdb/
-.config/rime/installation.yaml
-.config/rime/user.yaml
-
-rime_console
-rime_deployer
-rime_patch
-
-; mpv 忽略
-.config/mpv/watch_later
-
-; karabiner
-.config/karabiner/automatic_backups
