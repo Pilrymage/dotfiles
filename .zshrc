@@ -269,3 +269,8 @@ unset __conda_setup
 export rs () { rsync -azP --ignore-existing --size-only -e 'ssh -C -c aes128-ctr -o ControlMaster=auto -o ControlPath=~/.ssh/ssh-%r@%h:%p -o ControlPersist=10m -p 2222' $1 pilrymage@47.115.200.117:/rsyncfiles --progress; }
 export sr () { rsync -av -e 'ssh -p 2222' pilrymage@47.115.200.117:/rsyncfiles/$1 ~/INBOX --progress; }
 alias calibreweb='python -m calibreweb'
+export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles
+export HOMEBREW_NO_AUTO_UPDATE=true
+
+export SCRCPY_SERVER_PATH=/Applications/极空间.app/Contents/Resources/app.asar.unpacked/bin/platform-tools/scrcpy-server
+export PATH=$PATH:/Applications/极空间.app/Contents/Resources/app.asar.unpacked/bin/platform-tools

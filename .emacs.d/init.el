@@ -1,19 +1,40 @@
-;;; -*- lexical-binding: t -*-
-(require 'package)
-;; 初始化包管理器
-(package-initialize)
+;; -*- lexical-binding: t -*-
+(let (
+      ;; 加载的时候临时增大`gc-cons-threshold'以加速启动速度。
+      (gc-cons-threshold most-positive-fixnum)
+      ;; 清空避免加载远程文件的时候分析文件。
+      (file-name-handler-alist nil))
+  (require 'benchmark-init-modes)
+  (require 'benchmark-init)
+  (benchmark-init/activate)
 
+    ;; 下面才写你的其它配置
+)
+(require 'package)
 (setq package-archives '(("gnu"    . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
                          ("nongnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
                          ("melpa"  . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
-(add-to-list 'load-path "/home/pilrymage/.guix-profile/share/emacs/site-lisp")
-(guix-emacs-autoload-packages) ;; 使用 guix 预加载包
-
+(package-initialize)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 (require 'use-package)
-(setq use-package-always-ensure t)
+
+;(add-hook 'after-init-hook 'benchmark-init/deactivate)
+(setq my-http-proxy "127.0.0.1:7890")
+(setq url-proxy-services
+      '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
+        ("http" . "127.0.0.1:7890")
+        ("https" . "127.0.0.1:7890")))
+(set-language-environment "utf-8")
+(set-default-coding-systems 'utf-8-unix)
+(set-keyboard-coding-system 'utf-8-unix)
+(set-terminal-coding-system 'utf-8-unix)
+(setq use-short-answers t)
+(setq inhibit-startup-screen t)
+(push '(tool-bar-lines . 0) default-frame-alist)
+
+
 (defvar data-dir "~/.emacs.d/data/")
 (defvar cache-dir "~/.emacs.d/cache/")
 (defvar user-dir "~/.emacs.d")
@@ -25,6 +46,7 @@
 
 (use-package better-defaults)
 (use-package rime
+  :defer t
   :bind (:map rime-mode-map
               ("C-`" . 'rime-send-keybinding)
               ("`" . 'rime-inline-ascii))
@@ -40,6 +62,7 @@
 ;;; =====COMPLETION======
 ;; company
 (use-package company
+  :defer t
   :hook (after-init . global-company-mode)
   :init
   (setq company-minimum-prefix-length 2
@@ -80,6 +103,7 @@
   )
 ;; vertico
 (use-package vertico
+;  :defer t
   :custom
   (setq vertico-resize nil
         vertico-count 17
@@ -88,6 +112,8 @@
   :init
   (vertico-mode))
 (use-package orderless
+;  :defer t
+  :ensure t
   :config
   (setq orderless-affix-dispatch-alist
         '((?! . orderless-without-literal)
@@ -112,7 +138,7 @@
   ;; ...otherwise find-file gets different highlighting than other commands
   (set-face-attribute 'completions-first-difference nil :inherit nil))
 (use-package consult
-  :defer t
+;  :defer t
   :config
   (setq consult-project-function #'doom-project-root
         consult-narrow-key "<"
@@ -137,10 +163,13 @@
 (use-package embark
   :defer t)
 (use-package marginalia
+  :defer t
   :hook (after-init . marginalia-mode))
 (use-package wgrep
+  :defer t
   :config (setq wgrep-auto-save-buffer t))
 (use-package vertico-posframe
+  :defer t
   :hook (vertico-mode . vertico-posframe-mode)
   :config
   (add-hook 'doom-after-reload-hook #'posframe-delete-all))
@@ -152,9 +181,11 @@
   (load-theme 'dracula t))
 ;; emoji +unicode
 (use-package emojify
+  :defer t
   :hook (after-init . global-emojify-mode)
   :config (emojify-set-emoji-styles (list 'unicode)))
 (use-package hl-todo
+  :defer t
   :hook (prog-mode . hl-todo-mode)
   :hook (yaml-mode . hl-todo-mode)
   :config
@@ -192,6 +223,7 @@
 ;; modeline
 (use-package doom-modeline
   :ensure t
+  :defer t
   :hook (after-init . doom-modeline-mode)
   :init
   (setq projectile-dynamic-mode-line nil)
@@ -211,12 +243,15 @@
   :defer t
   :hook (isearch-mode . (lambda () (require 'anzu))))
 (use-package evil-anzu
+  :defer t
   :after (evil)
   :config (global-anzu-mode +1))
 ;; nav-flash -> pulsar.el
-(use-package pulsar)
+(use-package pulsar
+  :defer t)
 ;; neotree
 (use-package neotree
+  :defer t
   :commands (neotree-show
              neotree-hide
              neotree-toggle
@@ -252,6 +287,7 @@
           "^#.*#$")))
 ;; ophints
 (use-package goggles                    ; evil
+  :defer t
   :hook ((prog-mode text-mode) . goggles-mode)
   :config
   (goggles-define +goggles-general-undo undo) ; goggles only supports `primitive-undo' by default
@@ -261,17 +297,20 @@
 ;; popup +defaults
 ;; treemacs
 ;; unicode
-(use-package unicode-fonts)
+(use-package unicode-fonts
+  :defer t)
 ;; vc-gutter +pretty
 ;; vi-tilde-fringe
 ;; workspaces
 ;; zen
 (use-package writeroom-mode
+  :defer t
   :config
   (defvar +zen--old-writeroom-global-effects writeroom-global-effects)
   (setq writeroom-global-effects nil)
   (setq writeroom-maximize-window nil))
 (use-package mixed-pitch
+  :defer t
   :hook (writeroom-mode . +zen-enable-mixed-pitch-mode-h)
   :config
   (defun +zen-enable-mixed-pitch-mode-h ()
@@ -299,6 +338,7 @@
 (defvar evil-want-C-u-delete t)
 (defvar evil-want-C-w-delete t)
 (use-package evil
+  :defer t
   :hook (after-init . evil-mode)
   :ensure t
   :preface
@@ -343,8 +383,10 @@
 ;; Ensure `evil-shift-width' always matches `tab-width'; evil does not police
 ;; this itself, so we must.
 
-(use-package evil-args)
+(use-package evil-args
+  :defer t)
 (use-package evil-easymotion
+  :defer t
   :config
   ;; Use evil-search backend, instead of isearch
   (evilem-make-motion evilem-motion-search-next #'evil-ex-search-next
@@ -367,6 +409,7 @@
   (evilem-make-motion evilem-motion-backward-word-end #'evil-backward-word-end :scope 'visible)
   (evilem-make-motion evilem-motion-backward-WORD-end #'evil-backward-WORD-end :scope 'visible))
 (use-package evil-embrace
+  :defer t
   :hook (LaTeX-mode . embrace-LaTeX-mode-hook)
   :hook (LaTeX-mode . +evil-embrace-latex-mode-hook-h)
   :hook (org-mode . embrace-org-mode-hook)
@@ -377,19 +420,27 @@
   :hook (scala-mode . +evil-embrace-scala-mode-hook-h)
   :config
   (setq evil-embrace-show-help-p nil))
-(use-package evil-exchange)
-(use-package evil-indent-plus)
-(use-package evil-lion)
-(use-package evil-nerd-commenter)
-(use-package evil-numbers)
-(use-package evil-surround
+(use-package evil-exchange
+  :defer t)
+(use-package evil-indent-plus
+  :defer t)
+(use-package evil-lion
+  :defer t)
+(use-package evil-nerd-commenter
+  :defer t)
+(use-package evil-numbers
+  :defer t)
+(use-package evil-surround 
+  :defer t
   :config (global-evil-surround-mode 1))
 (use-package evil-textobj-anyblock)
 (use-package evil-traces
   :config (evil-traces-mode))
 (use-package exato
+  :defer t
   :commands evil-outer-xml-attr evil-inner-xml-attr)
 (use-package evil-quick-diff
+  :defer t
   :quelpa (evil-quick-diff :fetcher github :repo "rgrinberg/evil-quick-diff"))
 ;; format
 (defcustom +format-on-save-disabled-modes
@@ -412,9 +463,7 @@
   :hook (after-init . apheleia-global-mode))
 ;; snippets          ; my elves. They type so I don't have to
 (defvar yas-snippet-dirs "~/.emacs.d/yasnippet")
-(use-package yasnippet
-  :init
-  (defvar yas-verbosity 2))
+
 (use-package auto-yasnippet
   :defer t
   :config
@@ -439,6 +488,7 @@
       ;; Screens are larger nowadays, we can afford slightly larger thumbnails
       image-dired-thumb-size 150)
 (use-package dirvish
+  :defer t
   :init
   (setq dirvish-cache-dir (concat cache-dir "dirvish"))
   :config
@@ -452,9 +502,11 @@
         dirvish-use-mode-line nil)
   (setq dirvish-subtree-always-show-state t))
 (use-package diredfl
+  :defer t
   :hook (dired-mode . diredfl-mode)
   :hook (dirvish-directory-view-mode . diredfl-mode))
 (use-package dired-x
+  :defer t
   :ensure nil
   :hook (dired-mode . dired-omit-mode)
   :config
@@ -510,6 +562,7 @@
                   (looking-at-p (concat "\\<" (regexp-opt +electric-indent-words))))))))
 ;;undo              ; persistent, smarter undo for your inevitable mistakes
 (use-package undo-fu
+  :defer t
   :hook (window-setup-hook . undo-fu-mode)
   :config
   (setq undo-limit 400000           ; 400kb (default is 160kb)
@@ -529,6 +582,7 @@
     :init-value nil
     :global t))
 (use-package undo-fu-session
+  :defer t
   :hook (undo-fu-mode . global-undo-fu-session-mode)
   :custom (undo-fu-session-directory (concat cache-dir "undo-fu-session"))
   :config
@@ -552,8 +606,10 @@
   (evil-set-initial-state 'vc-hg-log-view-mode 'emacs)
   (evil-set-initial-state 'vc-bzr-log-view-mode 'emacs)
   (evil-set-initial-state 'vc-svn-log-view-mode 'emacs))
-(use-package vc :ensure nil)
+(use-package vc :ensure nil
+  :defer t)
 (use-package vc-annotate
+  :defer t
   :ensure nil
   :config
   (evil-set-initial-state 'vc-annotate-mode 'normal))
@@ -571,17 +627,22 @@
                   (when (re-search-forward "^<<<<<<< " nil t)
                     (smerge-mode 1)))))))
 
-(use-package browse-at-remote)
+(use-package browse-at-remote
+  :defer t)
 (use-package git-timemachine
+  :defer t
   :quelpa (git-timemachine :fetcher github :repo "emacsmirror/git-timemachine")
   :config
   (setq git-timemachine-show-minibuffer-details t)
   (with-eval-after-load 'evil
     (add-hook 'git-timemachine-mode-hook #'evil-normalize-keymaps)))
-(use-package git-modes)
+(use-package git-modes
+  :defer t
+  )
 ;;;;=======term======
 ;;vterm             ; 用过的最吼的
 (use-package vterm
+  :defer t
   :hook (vterm-mode . hide-mode-line-mode)
   :config
   (setq vterm-kill-buffer-on-exit t)
@@ -594,6 +655,7 @@
 (setq eval-expression-print-length nil
       eval-expression-print-level  nil)
 (use-package quickrun
+  :defer t
   :config
   (setq quickrun-focus-p nil)
   (add-hook 'quickrun-after-run-hook
@@ -609,6 +671,7 @@
                 (with-selected-window win
                   (goto-char (point-min)))))))
 (use-package eros
+  :defer t
   :hook (emacs-lisp-mode . eros-mode))
 
 ;;(magit +forge)            ; a git porcelain for Emacs
@@ -624,6 +687,7 @@
 
   Only has an effect in GUI Emacs.")
 (use-package magit
+  :defer t
   :init
   (setq magit-auto-revert-mode nil)  ; we do this ourselves further down
   ;; Must be set early to prevent ~/.config/emacs/transient from being created
@@ -651,6 +715,7 @@
   (define-key magit-mode-map "Q" #'+magit/quit-all)
   (define-key transient-map [escape] #'transient-quit-one))
 (use-package forge
+  :defer t
   :preface
   (setq forge-database-file (concat data-dir "forge/forge-database.sqlite"))
   (setq forge-add-default-bindings t))
@@ -661,10 +726,12 @@
                                         ;        code-review-log-file (concat data-dir "code-review/code-review-error.log")
                                         ;        code-review-download-dir (concat data-dir "code-review/")))
 ;;make              ; run make tasks from Emacs
-(use-package makefile-executor)
+(use-package makefile-executor
+  :defer t)
 ;;tree-sitter       ; syntax and parsing, sitting in a tree...
 (defvar +tree-sitter-hl-enabled-modes '(not web-mode typescript-tsx-mode))
-(use-package tree-sitter-langs)
+(use-package tree-sitter-langs
+  :defer t)
 (use-package tree-sitter
   :defer t
   :config
@@ -673,15 +740,19 @@
   (setq tree-sitter-debug-jump-buttons t
         ;; and this highlights the entire sub tree in your code
         tree-sitter-debug-highlight-jump-region t))
-(use-package tree-sitter-indent)
+(use-package tree-sitter-indent
+  :defer t)
 ;;upload            ; map local to remote projects via ssh/ftp
 (use-package ssh-deploy
+  :defer t
   :init
   (setq ssh-deploy-revision-folder (concat cache-dir "ssh-revisions/")
         ssh-deploy-on-explicit-save 1
         ssh-deploy-automatically-detect-remote-changes nil))
 ;; lsp
 (use-package lsp-mode
+  :defer t                              ;w
+  
                                         ;  :disabled t
   :init
   (setq lsp-session-file (concat cache-dir "lsp-session")
@@ -711,6 +782,7 @@
                                    (remq 'company-capf company-backends)))))))
   (defvar +lsp--deferred-shutdown-timer nil))
 (use-package lsp-ui
+  :defer t
                                         ;  :disabled t
   :hook (lsp-mode . lsp-ui-mode)
   :config
@@ -738,48 +810,67 @@
 (setq xterm-set-window-title t)
 (setq visible-cursor nil)
 (add-hook 'tty-setup-hook #'xterm-mouse-mode)
-(use-package xclip)
-(use-package clipetty)
+(use-package xclip
+  :defer t)
+(use-package clipetty
+  :defer t)
 (use-package evil-terminal-cursor-changer
+  :defer t
   :hook (tty-setup . evil-terminal-cursor-changer-activate))
 (use-package kkp
+  :defer t
   :hook (after-init . global-kkp-mode))
 ;;;; =======lang======
 ;; ansible
 (use-package ansible
+  :defer t
   :config
   (setq ansible-section-face 'font-lock-variable-name-face
         ansible-task-label-face 'font-lock-doc-face)
   (add-to-list 'company-backends 'company-ansible))
 (use-package ansible-doc
+  :defer t
   :config
   (evil-set-initial-state '(ansible-doc-module-mode) 'emacs))
 (use-package jinja2-mode
+  :defer t
   :disabled t
   :mode "\\.j2\\"
   :config
   (setq jinja2-enable-indent-on-save nil))
-(use-package yaml-mode)
-(use-package company-ansible)
+(use-package yaml-mode
+  :defer t)
+(use-package company-ansible
+  :defer t)
 
 ;;(agda +local)              ; types of types of types of types...
 (use-package agda2-mode
+  :defer t
   :quelpa (agda2-mode :fetcher github :repo "agda/agda"
                       :files ("src/data/emacs-mode/*.el" (:exclude "agda-input.el"))
                       :nonrecursive t))
 ;;(cc +lsp)         ; C > C++ == 1
-(use-package cmake-mode)
-(use-package cuda-mode)
-(use-package demangle-mode)
-(use-package disaster)
-(use-package opencl-c-mode)
-(use-package ccls)
+(use-package cmake-mode
+  :defer t)
+(use-package cuda-mode
+  :defer t)
+(use-package demangle-mode
+  :defer t)
+(use-package disaster
+  :defer t)
+(use-package opencl-c-mode
+  :defer t)
+(use-package ccls
+  :defer t)
 
 ;;common-lisp       ; if you've seen one lisp, you've seen them all
 ;;coq               ; proofs-as-programs
 ;;emacs-lisp         ; drown in parentheses
-(use-package rainbow-delimiters)
-(use-package elisp-mode :ensure nil
+(use-package rainbow-delimiters
+  :defer t)
+(use-package elisp-mode
+  :defer t
+  :ensure nil
   :mode ("\\.Cask\\'" . emacs-lisp-mode)
   :config
   (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
@@ -809,8 +900,10 @@
                                  (not (or (nth 3 state)
                                           (nth 4 state))))))
                            ,@match-highlights)))))
-(use-package highlight-quoted)
+(use-package highlight-quoted
+  :defer t)
 (use-package helpful
+  :defer t
   :hook (hepful-mode . visual-line-mode)
   :init
   (setq apropos-do-all t)
@@ -827,13 +920,16 @@
        (lambda (button)
          (helpful-variable (button-get button 'apropos-symbol)))))))
 (use-package macrostep)
+:defer t
 (use-package overseer)
+:defer t
 ;;;###package overseer
 (autoload 'overseer-test "overseer" nil t)
 ;; Properly lazy load overseer by not loading it so early:
 (remove-hook 'emacs-lisp-mode-hook #'overseer-enable-mode)
 
-(use-package elisp-def)
+(use-package elisp-def
+  :defer t)
 (use-package elisp-demos
   :defer t)
                                         ;(use-package buttercup
@@ -851,6 +947,7 @@
 ;;lua               ; one-based indices? one-based indices
 ;;(markdown +grip)          ; writing docs for people to ignore
 (use-package markdown-mode
+  :defer t
   :mode ("/README\\(?:\\.md\\)?\\'" . gfm-mode)
   :init
   (setq markdown-italic-underscore t
@@ -883,31 +980,50 @@
 ;;ocaml             ; an objective camel
 ;;(org +dragndrop +journal +hugo +present +pomodoro)               ; contacts 与 jupyter 还没相活
 (use-package org
+  :defer t
   :quelpa (org :fetcher github :repo "emacs-straight/org-mode" :files (:defaults "etc")
                :depth 1 :build t))
                                         ;(use-package org-contrib :quelpa (org-contrib :fetcher github :repo "emacsmirror/org-conrtib"))
-(use-package avy)
-(use-package htmlize)
-(use-package ox-clip)
-(use-package toc-org)
-(use-package org-cliplink)
-(use-package orgit)
-(use-package orgit-forge)
-(use-package org-download)
-(use-package gnuplot)
-(use-package gnuplot-mode)
-(use-package org-journal)
-(use-package org-noter)
-(use-package org-superstar)
-(use-package centered-window)
-(use-package org-tree-slide)
-(use-package org-re-reveal)
+(use-package avy
+  :defer t)
+(use-package htmlize
+  :defer t)
+(use-package ox-clip
+  :defer t)
+(use-package toc-org
+  :defer t)
+(use-package org-cliplink
+  :defer t)
+(use-package orgit
+  :defer t)
+(use-package orgit-forge
+  :defer t)
+(use-package org-download
+  :defer t)
+(use-package gnuplot
+  :defer t)
+(use-package gnuplot-mode
+  :defer t)
+(use-package org-journal
+  :defer t)
+(use-package org-noter
+  :defer t)
+(use-package org-superstar
+  :defer t)
+(use-package centered-window
+  :defer t)
+(use-package org-tree-slide
+  :defer t)
+(use-package org-re-reveal
+  :defer t)
+(require 'org-tempo)
 (use-package revealjs
-  :ensure t
   :defer t
   :quelpa (revealjs :fetcher github :repo "hakimel/reveal.js" :files ("css" "dist" "js" "plugin")))
-(use-package ob-async)
-(use-package ox-pandoc)
+(use-package ob-async
+  :defer t)
+(use-package ox-pandoc
+  :defer t)
 ;;php               ; perl's insecure younger brother
 ;;plantuml          ; diagrams for confusing people more
 ;;(python +conda)            ; beautiful is better than ugly
@@ -921,6 +1037,7 @@
 ;;literate                    ;
 ;;(default +bindings +smartparens))
 (use-package avy
+  :defer t
   :config
   (setq avy-all-windows nil
         avy-all-windows-alt t
@@ -928,14 +1045,17 @@
         ;; the unpredictability of this (when enabled) makes it a poor default
         avy-single-candidate-jump nil))
 (setq tramp-default-method "ssh")
-(use-package link-hint)
+(use-package link-hint
+  :defer t)
 ;;;; ============ CENTAURS ============
 (use-package minions
+  :defer t
   :hook (doom-modeline-mode . minions-mode))
 (use-package nerd-icons
   :config
   (if t (nerd-icons-install-fonts t) nil))
 (use-package display-line-numbers
+  :defer t
   :ensure nil
   :hook ((prog-mode yaml-mode yaml-ts-mode conf-mode) . display-line-numbers-mode)
   :init (setq display-line-numbers-width-start t))
@@ -948,6 +1068,7 @@
 (unless (daemonp)
   (advice-add #'display-startup-echo-area-message :override #'ignore))
 (use-package time
+  :defer t
   :init (setq display-time-default-load-average nil
               display-time-format "%H:%M"))
 (setq scroll-step 1
@@ -965,28 +1086,35 @@
              ([remap prior] . good-scroll-down-full-screen))))good-scroll)
 ;; (use-package alert ; 可惜不支持中文
 ;;   :quelpa (:fetcher github :repo "jwiegley/alert"))
-(use-package grip-mode)
+(use-package grip-mode
+  :defer t)
 (use-package ox-gfm
+  :defer t
   :quelpa (:fetcher github
                     :repo "larstvei/ox-gfm"
                     :files ("*.el")))
-(use-package helm-bibtex)
-(use-package cnfonts)
+(use-package helm-bibtex
+  :defer t)
 
 ;; When using bibtex-completion via the `biblio` module
 (use-package ob-powershell
+  :defer t
   :quelpa (:fetcher github :repo "rkiggen/ob-powershell"))
 (use-package bison-mode
+  :defer t
   :quelpa (:fetcher github :repo "Wilfred/bison-mode" :files ("*.el")))
 (use-package flex-mode
+  :defer t
   :quelpa (:fetcher github :repo "manateelazycat/flex" :files ("*.el")))
 (use-package j-mode
+  :defer t
   :quelpa (:fetcher github :repo "LdBeth/j-mode" :files ("*.el")))
-(use-package anki-editor)
+(use-package anki-editor
+  :defer t)
 ;;;; ============= CONFIG =============
 
 (setq frame-resize-pixelwise t)         ;窗口大小调整像素级别
-(setq tab-width 2)                      ;tab宽度
+(setq tab-width 4)                      ;tab 宽度
 (setq blink-cursor-mode 0)
 (setq idle-update-delay 1.0)
 (setq-default cursor-in-non-selected-windows nil)
@@ -1012,14 +1140,14 @@
        default-frame-alist))
 (setq scroll-margin 4) ; 显示上下边界，让光标不至于在屏幕边缘
 (setq display-line-numbers-type t)      ; 行号显示
-(setq org-directory "~/org")            ; org主目录，也是很多东西被organized的主目录，简短仅次于根目录
-(setq org-roam-directory "~/orgroam")   ; roam特别地需要一个目录
-(setq my/org-agenda-inbox "~/org/agenda/inbox.org") ; inbox.org的路径
+(setq org-directory "~/org")            ; org 主目录，也是很多东西被 organized 的主目录，简短仅次于根目录
+(setq org-roam-directory "~/orgroam")   ; roam 特别地需要一个目录
+(setq my/org-agenda-inbox "~/org/agenda/inbox.org") ; inbox.org 的路径
 (setq org-roam-database-connector 'sqlite)
 
 ;;; ====== Evil ======
-(setq evil-shift-width 2) ; 设置evil的缩进宽度
-(setq evil-want-C-i-jump nil)           ; 设置tab键的行为
+(setq evil-shift-width 2) ; 设置 evil 的缩进宽度
+(setq evil-want-C-i-jump nil)           ; 设置 tab 键的行为
 (defun repeat-command (proc times)      ; 重复执行数次
   (dotimes (_ times)
     (funcall proc)))
@@ -1069,12 +1197,14 @@
         ("C-n" . next-line)
         ("C-f" . forward-char)
         ("C-b" . backward-char)
+        ("C-a" . beginning-of-line)
+        ("C-e" . end-of-line)
         ("C-u" . nil)
         ("C-k". org-kill-line)))
 (dolist (pair my/evil-insert-binding)
   (evil-global-set-key 'insert (kbd (car pair)) (cdr pair)))
-(setq org-startup-numerated t)          ; 设置org目录编号
-(setq org-structure-template-alist ; org模板，其他语言
+(setq org-startup-numerated t)          ; 设置 org 目录编号
+(setq org-structure-template-alist ; org 模板，其他语言
       (append org-structure-template-alist
               '(("el" . "src emacs-lisp")
                 ("sh" . "src bash")
@@ -1111,7 +1241,7 @@
 (format-time-string "%Y/%m/%d W%W D%j (%a)")
 
 ;; 这个是手动看字体如何，手动可以调出粗体但是感觉这个来日用还是太粗了
-;; 虽然己经等宽了，但是感觉还是用cnfonts 熟悉
+;; 虽然己经等宽了，但是感觉还是用 cnfonts 熟悉
 (use-package cnfonts
   :ensure t
   :after all-the-icons
@@ -1141,6 +1271,52 @@
 (cnfonts-mode 1)
 
 (use-package pangu-spacing
+  :defer t
   :config
   (global-pangu-spacing-mode 1)
   (setq pangu-spacing-real-insert-separtor t))
+(use-package which-key
+  :defer t
+  ;; 在 Emacs 30 中内置
+  :config
+  (setq which-key-mode t)
+  (setq which-key-side-window-max-width 0.5)
+  (setq which-key-popup-type 'side-window))
+
+(progn
+  ;; modify dired keys
+  (require 'evil)
+  (when (boundp 'evil-motion-state-map)
+
+    ;; emacs 29 syntax
+    (keymap-set evil-motion-state-map "SPC" nil)
+    (keymap-set evil-motion-state-map "SPC 0" #'restart-emacs)
+    (keymap-set evil-motion-state-map "SPC b" #'switch-to-buffer)
+    (keymap-set evil-motion-state-map "SPC d" #'dired)
+    (keymap-set evil-motion-state-map "SPC f" #'find-file)
+    (keymap-set evil-motion-state-map "SPC g" #'magit)
+    (keymap-set evil-motion-state-map "SPC j" #'org-journal-new-entry)
+    (keymap-set evil-motion-state-map "SPC m s" #'bookmark-set)
+    (keymap-set evil-motion-state-map "SPC m l" #'list-bookmarks)
+    (keymap-set evil-motion-state-map "SPC m j" #'bookmark-jump)
+    (keymap-set evil-motion-state-map "SPC r" #'recentf)
+    (keymap-set evil-motion-state-map "SPC `" #'vterm)
+
+    ;;
+    ))  
+;; Xah Lee
+(global-set-key (kbd "<f8>") #'execute-extended-command)
+(electric-pair-mode 1)
+(setq electric-pair-pairs ; 自动配对
+      '(
+        (?\" . ?\")
+        (?\{ . ?\})
+        (?\“ . ?\”)
+        (?\‘ . ?\’)
+        (?\【  . ?\】)
+        (?\「  . ?\」)
+        (?\《  . ?\》)
+        (?\（  . ?\）)
+        ))
+(setq show-paren-style 'mixed) ; 显示配对括号高亮
+(message "emacs init time %s" (emacs-init-time))
