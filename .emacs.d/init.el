@@ -1,15 +1,38 @@
-;; -*- lexical-binding: t -*-
-(let (
-      ;; 加载的时候临时增大`gc-cons-threshold'以加速启动速度。
-      (gc-cons-threshold most-positive-fixnum)
-      ;; 清空避免加载远程文件的时候分析文件。
-      (file-name-handler-alist nil))
-  (require 'benchmark-init-modes)
-  (require 'benchmark-init)
-  (benchmark-init/activate)
+;;; Defer garbage collection further back in the startup process
+                                        ; -*- lexical-binding: t -*-
+(setq my-http-proxy "127.0.0.1:7890")
+(setq url-proxy-services
+      '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
+        ("http" . "127.0.0.1:7890")
+        ("https" . "127.0.0.1:7890")))
 
-    ;; 下面才写你的其它配置
-)
+(setq gc-cons-threshold most-positive-fixnum)
+
+;; Prevent flashing of unstyled modeline at startup
+(setq-default mode-line-format nil)
+
+;; Don't pass case-insensitive to `auto-mode-alist'
+(setq auto-mode-case-fold nil)
+
+;; Load path
+;; Optimize: Force "lisp"" and "site-lisp" at the head to reduce the startup time.
+(defun update-load-path (&rest _)
+  "Update `load-path'."
+  (dolist (dir '("site-lisp" "lisp"))
+    (push (expand-file-name dir user-emacs-directory) load-path)))
+
+(defun add-subdirs-to-load-path (&rest _)
+  "Add subdirectories to `load-path'.
+
+Don't put large files in `site-lisp' directory, e.g. EAF.
+Otherwise the startup will be very slow."
+  (let ((default-directory (expand-file-name "site-lisp" user-emacs-directory)))
+    (normal-top-level-add-subdirs-to-load-path)))
+
+(advice-add #'package-initialize :after #'update-load-path)
+(advice-add #'package-initialize :after #'add-subdirs-to-load-path)
+
+(update-load-path)
 (require 'package)
 (setq package-archives '(("gnu"    . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
                          ("nongnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
@@ -20,12 +43,7 @@
   (package-install 'use-package))
 (require 'use-package)
 
-;(add-hook 'after-init-hook 'benchmark-init/deactivate)
-(setq my-http-proxy "127.0.0.1:7890")
-(setq url-proxy-services
-      '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
-        ("http" . "127.0.0.1:7890")
-        ("https" . "127.0.0.1:7890")))
+                                        ;(add-hook 'after-init-hook 'benchmark-init/deactivate)
 (set-language-environment "utf-8")
 (set-default-coding-systems 'utf-8-unix)
 (set-keyboard-coding-system 'utf-8-unix)
@@ -103,7 +121,7 @@
   )
 ;; vertico
 (use-package vertico
-;  :defer t
+                                        ;  :defer t
   :custom
   (setq vertico-resize nil
         vertico-count 17
@@ -112,33 +130,12 @@
   :init
   (vertico-mode))
 (use-package orderless
-;  :defer t
   :ensure t
-  :config
-  (setq orderless-affix-dispatch-alist
-        '((?! . orderless-without-literal)
-          (?& . orderless-annotation)
-          (?% . char-fold-to-regexp)
-          (?` . orderless-initialism)
-          (?= . orderless-literal)
-          (?^ . orderless-literal-prefix)
-          (?~ . orderless-flex)))
-  (add-to-list
-   'completion-styles-alist
-   '(+vertico-basic-remote
-     +vertico-basic-remote-try-completion
-     +vertico-basic-remote-all-completions
-     "Use basic completion on remote files only"))
-  (setq completion-styles '(orderless basic)
-        completion-category-defaults nil
-        ;; note that despite override in the name orderless can still be used in
-        ;; find-file etc.
-        completion-category-overrides '((file (styles +vertico-basic-remote orderless partial-completion)))
-        orderless-component-separator #'orderless-escapable-split-on-space)
-  ;; ...otherwise find-file gets different highlighting than other commands
-  (set-face-attribute 'completions-first-difference nil :inherit nil))
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 (use-package consult
-;  :defer t
+                                        ;  :defer t
   :config
   (setq consult-project-function #'doom-project-root
         consult-narrow-key "<"
@@ -176,9 +173,12 @@
 
 ;;; ====== UI ======
 ;; theme
-(use-package dracula-theme
+(use-package doom-themes
+  :ensure t
   :config
-  (load-theme 'dracula t))
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  (load-theme 'doom-city-lights t))
 ;; emoji +unicode
 (use-package emojify
   :defer t
@@ -874,8 +874,7 @@
   :mode ("\\.Cask\\'" . emacs-lisp-mode)
   :config
   (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
-  (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'emacs-lisp-mode-hook #'highlight-quoted-mode))
+  (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode))
 (use-package ielm
   :defer t
   :config
@@ -1051,13 +1050,11 @@
 (use-package minions
   :defer t
   :hook (doom-modeline-mode . minions-mode))
-(use-package nerd-icons
-  :config
-  (if t (nerd-icons-install-fonts t) nil))
+(use-package nerd-icons)
 (use-package display-line-numbers
   :defer t
   :ensure nil
-  :hook ((prog-mode yaml-mode yaml-ts-mode conf-mode) . display-line-numbers-mode)
+  :hook ((prog-mode yaml-mode yaml-ts-mode conf-mode org-mode) . display-line-numbers-mode)
   :init (setq display-line-numbers-width-start t))
 (setq use-file-dialog nil
       use-dialog-box nil
@@ -1076,14 +1073,14 @@
       scroll-conservatively 100000
       auto-window-vscroll nil
       scroll-preserve-screen-position t)
-(if (fboundp 'pixel-scroll-precision-mode)
-    (pixel-scroll-precision-mode t)
-  (unless sys/macp
-    (use-package good-scroll
-      :diminish
-      :hook (after-init . good-scroll-mode)
-      :bind (([remap next] . good-scroll-up-full-screen)
-             ([remap prior] . good-scroll-down-full-screen))))good-scroll)
+;; (if (fboundp 'pixel-scroll-precision-mode)
+;;     (pixel-scroll-precision-mode t)
+;;   (unless sys/macp
+;;     (use-package good-scroll
+;;       :diminish
+;;       :hook (after-init . good-scroll-mode)
+;;       :bind (([remap next] . good-scroll-up-full-screen)
+;;              ([remap prior] . good-scroll-down-full-screen))))good-scroll)
 ;; (use-package alert ; 可惜不支持中文
 ;;   :quelpa (:fetcher github :repo "jwiegley/alert"))
 (use-package grip-mode
@@ -1204,17 +1201,6 @@
 (dolist (pair my/evil-insert-binding)
   (evil-global-set-key 'insert (kbd (car pair)) (cdr pair)))
 (setq org-startup-numerated t)          ; 设置 org 目录编号
-(setq org-structure-template-alist ; org 模板，其他语言
-      (append org-structure-template-alist
-              '(("el" . "src emacs-lisp")
-                ("sh" . "src bash")
-                ("py" . "src python :results output")
-                ("fi" . "src fish")
-                ("js" . "src javascript")
-                ("cc" . "src c")
-                ("cp" . "src cpp")
-                ("plm" . "src plantuml\n@startmindmap")
-                ("pw" . "src powershell"))))
 (setq system-time-locale "zh_CN")
 (setq chinese-calendar-celestial-stem
       ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
@@ -1242,33 +1228,73 @@
 
 ;; 这个是手动看字体如何，手动可以调出粗体但是感觉这个来日用还是太粗了
 ;; 虽然己经等宽了，但是感觉还是用 cnfonts 熟悉
-(use-package cnfonts
-  :ensure t
-  :after all-the-icons
-  :hook (cnfonts-set-font-finish
-         . (lambda (fontsize-list)
-             (set-fontset-font t 'unicode (font-spec :family "all-the-icons") nil 'append)
-             (set-fontset-font t 'unicode (font-spec :family "file-icons") nil 'append)
-             (set-fontset-font t 'unicode (font-spec :family "Material Icons") nil 'append)
-             (set-fontset-font t 'unicode (font-spec :family "github-octicons") nil 'append)
-             (set-fontset-font t 'unicode (font-spec :family "FontAwesome") nil 'append)
-             (set-fontset-font t 'unicode (font-spec :family "Weather Icons") nil 'append)))
-  :config
-  (set-fontset-font "fontset-default" 'unicode "Apple Color Emoji" nil 'prepend)
-  (global-set-key (kbd "C--") 'cnfonts-decrease-fontsize)
-  (global-set-key (kbd "C-=") 'cnfonts-increase-fontsize)
-  (setq cnfonts-profiles '("normal")
-        cnfonts-directory (concat user-dir "cnfonts")
-        cnfonts-personal-fontnames
-        '(;;英文字体
-          ("Liga SFMono Nerd font" "SF Pro Text" "IosevkaTerm Nerd Font Mono"
-           "Iosevka Term")
-          ;; 中文字体
-          ("PingFang SC"
-           "Source Han Serif SC"
-           "LXGW Wenkai")))
-  (cnfonts-enable))
-(cnfonts-mode 1)
+;; (use-package cnfonts
+;;   :ensure t
+;;   :after all-the-icons
+;;   :hook (cnfonts-set-font-finish
+;;          . (lambda (fontsize-list)
+;;              (set-fontset-font t 'unicode (font-spec :family "all-the-icons") nil 'append)
+;;              (set-fontset-font t 'unicode (font-spec :family "file-icons") nil 'append)
+;;              (set-fontset-font t 'unicode (font-spec :family "Material Icons") nil 'append)
+;;              (set-fontset-font t 'unicode (font-spec :family "github-octicons") nil 'append)
+;;              (set-fontset-font t 'unicode (font-spec :family "FontAwesome") nil 'append)
+;;              (set-fontset-font t 'unicode (font-spec :family "Weather Icons") nil 'append)))
+;;   :config
+;;   (set-fontset-font "fontset-default" 'unicode "Apple Color Emoji" nil 'prepend)
+;;   (global-set-key (kbd "C--") 'cnfonts-decrease-fontsize)
+;;   (global-set-key (kbd "C-=") 'cnfonts-increase-fontsize)
+;;   (setq cnfonts-profiles '("normal")
+;;         cnfonts-directory (concat user-dir "cnfonts")
+;;         cnfonts-personal-fontnames
+;;         '(;;英文字体
+;;           ("Liga SFMono Nerd font" "SF Pro Text" "IosevkaTerm Nerd Font Mono"
+;;            "Iosevka Term")
+;;           ;; 中文字体
+;;           ("PingFang SC"
+;;            "Source Han Serif SC"
+;;            "LXGW Wenkai")))
+;;   (cnfonts-enable))
+;; (cnfonts-mode 1)
+;; Fonts
+(defun centaur-setup-fonts ()
+  "Setup fonts."
+  (when (display-graphic-p)
+    ;; Set default font
+    (cl-loop for font in '("IosevkaTerm Nerd Font Mono")
+                                        ;             when (font-installed-p font)
+             return (set-face-attribute 'default nil
+                                        :family font
+                                        :height 200))
+
+    ;; Specify font for all unicode characters
+    (cl-loop for font in '("Segoe UI Symbol" "Symbola" "Symbol")
+                                        ;             when (font-installed-p font)
+             return (if (< emacs-major-version 27)
+                        (set-fontset-font "fontset-default" 'unicode font nil 'prepend)
+                      (set-fontset-font t 'symbol (font-spec :family font) nil 'prepend)))
+
+    ;; Emoji
+    (cl-loop for font in '("Noto Color Emoji" "Apple Color Emoji" "Segoe UI Emoji")
+                                        ;             when (font-installed-p font)
+             return (cond
+                     ((< emacs-major-version 27)
+                      (set-fontset-font "fontset-default" 'unicode font nil 'prepend))
+                     ((< emacs-major-version 28)
+                      (set-fontset-font t 'symbol (font-spec :family font) nil 'prepend))
+                     (t
+                      (set-fontset-font t 'emoji (font-spec :family font) nil 'prepend))))
+
+    ;; Specify font for Chinese characters
+    (cl-loop for font in '("LXGW Wenkai")
+                                        ;             when (font-installed-p font)
+             return (progn
+                                        ;(setq face-font-rescale-alist `((,font . 1.3)))
+                      (set-fontset-font t 'han (font-spec :family font))))))
+
+(centaur-setup-fonts)
+(add-hook 'window-setup-hook #'centaur-setup-fonts)
+(add-hook 'server-after-make-frame-hook #'centaur-setup-fonts)
+
 
 (use-package pangu-spacing
   :defer t
@@ -1276,7 +1302,7 @@
   (global-pangu-spacing-mode 1)
   (setq pangu-spacing-real-insert-separtor t))
 (use-package which-key
-  :defer t
+  :ensure t
   ;; 在 Emacs 30 中内置
   :config
   (setq which-key-mode t)
@@ -1319,4 +1345,5 @@
         (?\（  . ?\）)
         ))
 (setq show-paren-style 'mixed) ; 显示配对括号高亮
+(require 'init-org)
 (message "emacs init time %s" (emacs-init-time))
