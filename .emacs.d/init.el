@@ -700,7 +700,11 @@ Otherwise the startup will be very slow."
   Only has an effect in GUI Emacs.")
 (use-package magit
   :defer t
+  :bind (:map magit-mode-map
+              ("q" . 'magit-mode-bury-buffer))
   :init
+  (setq magit-refresh-status-buffer t)
+  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
   (setq magit-auto-revert-mode nil)  ; we do this ourselves further down
   ;; Must be set early to prevent ~/.config/emacs/transient from being created
   (setq transient-levels-file (concat data-dir "transient/levels")
@@ -708,11 +712,12 @@ Otherwise the startup will be very slow."
         transient-history-file (concat data-dir "transient/history"))
   :config
   (setq transient-default-level 5
-        magit-diff-refine-hunk t ; show granular diffs in selected hunk
+        magit-diff-refine-hunk nil ; show granular diffs in selected hunk
         ;; Don't autosave repo buffers. This is too magical, and saving can
         ;; trigger a bunch of unwanted side-effects, like save hooks and
         ;; formatters. Trust the user to know what they're doing.
         magit-save-repository-buffers nil
+        magit-push-current-set-remote-if-missing t
         ;; Don't display parent/related refs in commit buffers; they are rarely
         ;; helpful and only add to runtime costs.
         magit-revision-insert-related-refs nil)
