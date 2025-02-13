@@ -34,6 +34,7 @@
         org-log-done 'time
         org-catch-invisible-edits 'smart
         org-startup-indented t
+        org-startup-truncated nil
         org-ellipsis (if (char-displayable-p ?⏷) "\t⏷" nil)
         org-pretty-entities nil
         org-hide-emphasis-markers t)
@@ -142,8 +143,8 @@
 (setq org-roam-directory "~/orgroam")   ; roam 特别地需要一个目录
 (setq my/org-agenda-inbox "~/org/agenda/inbox.org") ; inbox.org 的路径
 (setq org-roam-database-connector 'sqlite)
-(provide 'init-org)
-;; Babel
 (setq org-confirm-babel-evaluate nil
       org-src-fontify-natively t
       org-src-tab-acts-natively t)
+(provide 'init-org)
+;; Babel
