@@ -1,9 +1,10 @@
 (use-package org
   :quelpa (org :fetcher github :repo "emacs-straight/org-mode" :files (:defaults "etc")
                :depth 1 :build t)
-  :bind (("C-c b" . org-switchb)
-         :map org-mode-map)
+  :bind (("C-c r" . denote-dired-rename-files)
+         :map dired-mode-map)
   :hook (((org-babel-after-execute org-mode) . org-redisplay-inline-images) ; display image
+         (visual-line-mode . org-mode)
          (org-indent-mode . (lambda()
                               ;; HACK: Prevent text moving around while using brackets
                               ;; @see https://github.com/seagle0128/.emacs.d/issues/88
@@ -126,6 +127,25 @@
   :defer t)
 (use-package ox-pandoc
   :defer t)
+(use-package denote
+  :bind
+  :config
+  (setq denote-directory (expand-file-name "~/Dropbox/denote")
+        denote-sort-keywords nil
+        denote-backlinks-show-context t
+        denote-known-keywords '("项目" "领域" "资源" "归档")
+        denote-file-type nil)
+  (setq my/evil-org-binding
+        '(("SPC n n" . denote)
+          ("SPC n d" . denote-sort-dired)
+          ("SPC n l" . denote-link)
+          ("SPC n L" . denote-add-links)
+          ("SPC n b" . denote-backlinks)
+          ("SPC n o" . denote-open-or-create)
+          ("SPC n r" . denote-rename-file)
+          ("SPC n R" . denote-rename-file-using-front-matter)))
+  (dolist (pair my/evil-org-binding)
+    (evil-define-key 'normal org-mode-map (kbd (car pair)) (cdr pair))))
 
 (setq org-startup-numerated t)          ; 设置 org 目录编号
 (setq org-tempo-keywords-alist ; org 模板，其他语言
