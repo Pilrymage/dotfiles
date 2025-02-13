@@ -12,15 +12,18 @@
                               (setq show-paren-mode nil))))
   :config
   ;; Define a custom face for list markers
-  (defface my-org-list-marker
-    '((t (:foreground "red" :weight bold)))
-    "Face for Org mode list markers.")
 
   ;; Apply the custom face to unordered and ordered list markers
+  (with-eval-after-load 'org
+    (define-key org-mode-map (kbd "SPC") nil))
+
+
   (font-lock-add-keywords
    'org-mode
-   '(("^\\([-+*]\\) " 1 'my-org-list-marker prepend)  ;; Unordered lists
-     ("^\\([0-9]+[.)]\\) " 1 'my-org-list-marker prepend))) ;; Ordered lists
+   '(("^\\( *[-+*]\\) " 1 'org-level-1 prepend)  ;; Unordered lists
+     ;; ("^\\( *[0-9]+\\(?:\\.\\|)\\) )" 1 'org-level-1 prepend)
+     ("^\\( *[0-9]+[\\.)]\\) " 1 'org-level-1 prepend)
+     )) ;; Ordered lists
   (setq org-modules nil
         org-directory "~/org"
         org-todo-keywords
