@@ -1281,7 +1281,7 @@ Otherwise the startup will be very slow."
                                         ;             when (font-installed-p font)
              return (set-face-attribute 'default nil
                                         :family font
-                                        :height 200))
+                                        :height 220))
 
     ;; Specify font for all unicode characters
     (cl-loop for font in '("Segoe UI Symbol" "Symbola" "Symbol")
@@ -1334,7 +1334,7 @@ Otherwise the startup will be very slow."
     ;; emacs 29 syntax
     (keymap-set evil-motion-state-map "SPC" nil)
     (keymap-set evil-motion-state-map "SPC 0" #'restart-emacs)
-    (keymap-set evil-motion-state-map "SPC b" #'switch-to-buffer)
+    (keymap-set evil-motion-state-map "SPC b" #'ibuffer)
     (keymap-set evil-motion-state-map "SPC d" #'dired)
     (keymap-set evil-motion-state-map "SPC f" #'find-file)
     (keymap-set evil-motion-state-map "SPC g" #'magit)
