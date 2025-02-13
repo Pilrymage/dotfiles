@@ -480,7 +480,7 @@ Otherwise the startup will be very slow."
 ;;dired             ; making dired pretty [functionul]
 (setq dired-dwim-target t  ; suggest a target for moving/copying intelligently
       ;; don't prompt to revert, just do it
-      dired-auto-revert-buffer #'dired-buffer-stale-p
+      auto-revert-remote-files t
       ;; Always copy/delete recursively
       dired-recursive-copies  'always
       dired-recursive-deletes 'top
@@ -494,6 +494,7 @@ Otherwise the startup will be very slow."
       image-dired-temp-rotate-image-file (concat image-dired-dir "temp-rotate-image")
       ;; Screens are larger nowadays, we can afford slightly larger thumbnails
       image-dired-thumb-size 150)
+(evil-set-initial-state 'dired-mode 'emacs)
 (use-package dirvish
   :defer t
   :init
@@ -522,6 +523,7 @@ Otherwise the startup will be very slow."
         (concat dired-omit-files
                 "\\|^\\.DS_Store\\'"
                 "\\|^flycheck_.*"
+                "\\|.*归档.*"
                 "\\|^\\.project\\(?:ile\\)?\\'"
                 "\\|^\\.\\(?:svn\\|git\\)\\'"
                 "\\|^\\.ccls-cache\\'"
@@ -552,6 +554,9 @@ Otherwise the startup will be very slow."
   :config
   (setq dired-create-destination-dirs 'ask
         dired-vc-rename-file t))
+(use-package dired-preview
+  :defer t
+  :hook (dired-mode . dired-preview-mode))
 ;;electric          ; smarter, keyword-based electric-indent
 (defvar-local +electric-indent-words '()
   "The list of electric words. Typing these will trigger reindentation of the
