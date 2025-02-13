@@ -382,7 +382,14 @@ Otherwise the startup will be very slow."
 
 ;; Ensure `evil-shift-width' always matches `tab-width'; evil does not police
 ;; this itself, so we must.
-
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
+(use-package evil-commentary
+  :ensure t
+  :config
+  (evil-commentary-mode))
 (use-package evil-args
   :defer t)
 (use-package evil-easymotion
