@@ -300,6 +300,27 @@ Otherwise the startup will be very slow."
 (use-package unicode-fonts
   :defer t)
 ;; vc-gutter +pretty
+(use-package diff-hl
+  :hook (after-init . global-diff-hl-mode)
+  :config
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+(use-package blamer
+  :ensure nil
+  :bind (("s-i" . blamer-show-commit-info)
+         ("C-c i" . blamer-show-posframe-commit-info))
+  :defer t
+  :custom
+  (blamer-idle-time 0.3)
+  (blamer-min-offset 20)
+  :custom-face
+  (blamer-face ((t :foreground "#7a88cf"
+                   :background nil
+                   :height 140
+                   :italic t)))
+  :config
+                                        ;  (global-blamer-mode 1)
+  (setq blamer--overlay-popup-position 'smart))
+
 ;; vi-tilde-fringe
 ;; workspaces
 ;; zen
@@ -712,7 +733,7 @@ Otherwise the startup will be very slow."
         transient-history-file (concat data-dir "transient/history"))
   :config
   (setq transient-default-level 5
-        magit-diff-refine-hunk nil ; show granular diffs in selected hunk
+        magit-diff-refine-hunk 'all ; show granular diffs in selected hunk
         ;; Don't autosave repo buffers. This is too magical, and saving can
         ;; trigger a bunch of unwanted side-effects, like save hooks and
         ;; formatters. Trust the user to know what they're doing.
