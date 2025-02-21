@@ -1359,6 +1359,7 @@ Otherwise the startup will be very slow."
     (keymap-set evil-motion-state-map "SPC d" #'dired)
     (keymap-set evil-motion-state-map "SPC f" #'find-file)
     (keymap-set evil-motion-state-map "SPC g" #'magit)
+    (keymap-set evil-motion-state-map "SPC e" #'elfeed)
     (keymap-set evil-motion-state-map "SPC j" #'org-journal-new-entry)
     (keymap-set evil-motion-state-map "SPC m s" #'bookmark-set)
     (keymap-set evil-motion-state-map "SPC m l" #'list-bookmarks)
@@ -1381,5 +1382,12 @@ Otherwise the startup will be very slow."
         (?\（  . ?\）)
         ))
 (setq show-paren-style 'mixed) ; 显示配对括号高亮
+(use-package elfeed
+  :ensure t
+  :config
+  (evil-set-initial-state 'elfeed-search-mode 'emacs)
+  (evil-set-initial-state 'elfeed-show-mode 'emacs))
+(use-package elfeed-org
+  :ensure t)
 (require 'init-org)
 (message "emacs init time %s" (emacs-init-time))
