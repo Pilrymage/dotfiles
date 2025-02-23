@@ -80,45 +80,8 @@ Otherwise the startup will be very slow."
 ;;; =====COMPLETION======
 ;; company
 (use-package company
-  :defer t
-  :hook (after-init . global-company-mode)
-  :init
-  (setq company-minimum-prefix-length 2
-        company-tooltip-limit 14
-        company-tooltip-align-annotations t
-        company-require-match 'never
-        company-idle-delay 0.26
-        company-global-modes
-        '(not erc-mode
-              circe-mode
-              message-mode
-              help-mode
-              gud-mode
-              vterm-mode)
-        company-frontends
-        '(company-pseudo-tooltip-frontend  ; always show candidates in overlay tooltip
-          company-echo-metadata-frontend)  ; show selected candidate docs in echo area
-
-        ;; Buffer-local backends will be computed when loading a major mode, so
-        ;; only specify a global default here.
-        company-backends '(company-capf)
-
-        ;; These auto-complete the current selection when
-        ;; `company-auto-commit-chars' is typed. This is too magical. We
-        ;; already have the much more explicit RET and TAB.
-        company-auto-commit nil
-
-        ;; Only search the current buffer for `company-dabbrev' (a backend that
-        ;; suggests text your open buffers). This prevents Company from causing
-        ;; lag once you have a lot of buffers open.
-        company-dabbrev-other-buffers nil
-        ;; Make `company-dabbrev' fully case-sensitive, to improve UX with
-        ;; domain-specific words with particular casing.
-        company-dabbrev-ignore-case nil
-        company-dabbrev-downcase nil)
-  :config
-  ;; evil 
-  )
+  :ensure t
+  :hook (after-init . global-company-mode))
 ;; vertico
 (use-package vertico
                                         ;  :defer t
@@ -1016,44 +979,18 @@ Otherwise the startup will be very slow."
 ;;nix               ; I hereby declare "nix geht mehr!"
 ;;ocaml             ; an objective camel
 ;;(org +dragndrop +journal +hugo +present +pomodoro)               ; contacts 与 jupyter 还没相活
-(use-package org
-  :defer t
-  :quelpa (org :fetcher github :repo "emacs-straight/org-mode" :files (:defaults "etc")
-               :depth 1 :build t))
-                                        ;(use-package org-contrib :quelpa (org-contrib :fetcher github :repo "emacsmirror/org-conrtib"))
 (use-package avy
   :defer t)
 (use-package htmlize
   :defer t)
 (use-package ox-clip
   :defer t)
-(use-package toc-org
-  :defer t)
-(use-package org-cliplink
-  :defer t)
-(use-package orgit
-  :defer t)
-(use-package orgit-forge
-  :defer t)
-(use-package org-download
-  :defer t)
 (use-package gnuplot
   :defer t)
 (use-package gnuplot-mode
   :defer t)
-(use-package org-journal
-  :defer t)
-(use-package org-noter
-  :defer t)
-(use-package org-superstar
-  :defer t)
 (use-package centered-window
   :defer t)
-(use-package org-tree-slide
-  :defer t)
-(use-package org-re-reveal
-  :defer t)
-(require 'org-tempo)
 (use-package revealjs
   :defer t
   :quelpa (revealjs :fetcher github :repo "hakimel/reveal.js" :files ("css" "dist" "js" "plugin")))
@@ -1175,10 +1112,6 @@ Otherwise the startup will be very slow."
        default-frame-alist))
 (setq scroll-margin 4) ; 显示上下边界，让光标不至于在屏幕边缘
 (setq display-line-numbers-type t)      ; 行号显示
-(setq org-directory "~/org")            ; org 主目录，也是很多东西被 organized 的主目录，简短仅次于根目录
-(setq org-roam-directory "~/orgroam")   ; roam 特别地需要一个目录
-(setq my/org-agenda-inbox "~/org/agenda/inbox.org") ; inbox.org 的路径
-(setq org-roam-database-connector 'sqlite)
 
 ;;; ====== Evil ======
 (setq evil-shift-width 2) ; 设置 evil 的缩进宽度
@@ -1238,31 +1171,7 @@ Otherwise the startup will be very slow."
         ("C-k". org-kill-line)))
 (dolist (pair my/evil-insert-binding)
   (evil-global-set-key 'insert (kbd (car pair)) (cdr pair)))
-(setq org-startup-numerated t)          ; 设置 org 目录编号
 (setq system-time-locale "zh_CN")
-(setq chinese-calendar-celestial-stem
-      ["甲" "乙" "丙" "丁" "戊" "己" "庚" "辛" "壬" "癸"])
-(setq chinese-calendar-terrestrial-branch
-      ["子" "丑" "寅" "卯" "辰" "巳" "午" "未" "申" "酉" "戌" "亥"])
-(defvar chinese-shuxiang-name
-  ["鼠" "牛" "虎" "兔" "龙" "蛇" "马" "羊" "猴" "鸡" "狗" "猪"])
-(nth 5 (decode-time))
-
-(defun chinese-year (year)
-  "返回农历年份"
-  (concat
-   (aref chinese-calendar-celestial-stem
-         (% (- year 4) 10))
-   (aref chinese-calendar-terrestrial-branch
-         (% (- year 4) 12))
-   (aref chinese-shuxiang-name
-         (% (- year 4) 12))
-   "年"))
-(setq chinese-year-now (chinese-year (nth 5 (decode-time))))
-(setq org-journal-file-type 'monthly)    ; 设置日记文件类型，每一个文件一个月，因为一年的文件太他妈大而卡死了
-(setq org-journal-file-format (concat "%Y-" chinese-year-now)) ; 把年份加入文件名
-(setq org-journal-date-format "%Y/%m/%d W%W D%j（%a）")
-(format-time-string "%Y/%m/%d W%W D%j (%a)")
 
 ;; 这个是手动看字体如何，手动可以调出粗体但是感觉这个来日用还是太粗了
 ;; 虽然己经等宽了，但是感觉还是用 cnfonts 熟悉
@@ -1388,6 +1297,7 @@ Otherwise the startup will be very slow."
   (evil-set-initial-state 'elfeed-search-mode 'emacs)
   (evil-set-initial-state 'elfeed-show-mode 'emacs))
 (use-package elfeed-org
-  :ensure t)
+  :ensure t
+  :init (elfeed-org))
 (require 'init-org)
 (message "emacs init time %s" (emacs-init-time))

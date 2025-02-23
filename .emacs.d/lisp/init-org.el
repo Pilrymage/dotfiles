@@ -59,6 +59,7 @@
 (use-package ox-clip
   :defer t)
 (use-package toc-org
+  :defer t
   :hook (org-mode . toc-org-mode))
 (use-package org-cliplink
   :defer t)
@@ -166,8 +167,13 @@
 (setq org-roam-directory "~/orgroam")   ; roam 特别地需要一个目录
 (setq my/org-agenda-inbox "~/org/agenda/inbox.org") ; inbox.org 的路径
 (setq org-roam-database-connector 'sqlite)
+(setq org-startup-numerated t)          ; 设置 org 目录编号
 (setq org-confirm-babel-evaluate nil
       org-src-fontify-natively t
       org-src-tab-acts-natively t)
+(setq org-journal-file-type 'monthly)    ; 设置日记文件类型，每一个文件一个月，因为一年的文件太他妈大而卡死了
+;; (setq org-journal-file-format (concat "%Y-" chinese-year-now)) ; 把年份加入文件名
+(setq org-journal-date-format "%Y/%m/%d W%W D%j（%a）")
+(format-time-string "%Y/%m/%d W%W D%j (%a)")
 (provide 'init-org)
 ;; Babel
