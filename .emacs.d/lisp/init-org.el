@@ -1,6 +1,4 @@
 (use-package org
-  :quelpa (org :fetcher github :repo "emacs-straight/org-mode" :files (:defaults "etc")
-               :depth 1 :build t)
   :bind (("C-c r" . denote-dired-rename-files)
          :map dired-mode-map)
   :hook (((org-babel-after-execute org-mode) . org-redisplay-inline-images) ; display image
@@ -44,7 +42,7 @@
         org-hide-emphasis-markers t)
   )
 
-                                        ;(use-package org-contrib :quelpa (org-contrib :fetcher github :repo "emacsmirror/org-conrtib"))
+                                        ;(use-package org-contrib :straight (org-contrib :host github :repo "emacsmirror/org-conrtib"))
 
 
 ;; Prettify UI
@@ -126,7 +124,7 @@
 (require 'org-tempo)
 (use-package revealjs
   :defer t
-  :quelpa (revealjs :fetcher github :repo "hakimel/reveal.js" :files ("css" "dist" "js" "plugin")))
+  :straight (revealjs :host github :repo "hakimel/reveal.js" :files ("css" "dist" "js" "plugin")))
 (use-package ob-async
   :defer t)
 (use-package ox-pandoc
@@ -140,14 +138,20 @@
         denote-known-keywords '("项目" "领域" "资源" "归档")
         denote-file-type nil)
   (setq my/evil-org-binding
-        '(("SPC n n" . denote)
+        '(("SPC n a" . org-toggle-narrow-to-subtree)
+          ("SPC n A" . org-tree-to-indirect-buffer)
+          ("SPC n n" . denote)
           ("SPC n d" . denote-sort-dired)
+          ("SPC n i" . org-cliplink)
           ("SPC n l" . denote-link)
           ("SPC n L" . denote-add-links)
           ("SPC n b" . denote-backlinks)
           ("SPC n o" . denote-open-or-create)
+          ("SPC n p" . org-priority)
+          ("SPC n q" . org-set-tags-command)
           ("SPC n r" . denote-rename-file)
-          ("SPC n R" . denote-rename-file-using-front-matter)))
+          ("SPC n R" . denote-rename-file-using-front-matter)
+          ("SPC n t" . org-todo)))
   (dolist (pair my/evil-org-binding)
     (evil-define-key 'normal org-mode-map (kbd (car pair)) (cdr pair))))
 

@@ -1,12 +1,32 @@
 ;;; Defer garbage collection further back in the startup process
                                         ; -*- lexical-binding: t -*-
-(setq my-http-proxy "127.0.0.1:7890")
 (setq url-proxy-services
       '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
         ("http" . "127.0.0.1:7890")
         ("https" . "127.0.0.1:7890")))
 
 (setq gc-cons-threshold most-positive-fixnum)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+(setq package-enable-at-startup nil)
+
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
+(use-package el-patch
+  :straight t)
 
 ;; Prevent flashing of unstyled modeline at startup
 (setq-default mode-line-format nil)
@@ -33,16 +53,10 @@ Otherwise the startup will be very slow."
 (advice-add #'package-initialize :after #'add-subdirs-to-load-path)
 
 (update-load-path)
-(require 'package)
 (setq package-archives '(("gnu"    . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
                          ("nongnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
                          ("melpa"  . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 (package-initialize)
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(require 'use-package)
-
                                         ;(add-hook 'after-init-hook 'benchmark-init/deactivate)
 (set-language-environment "utf-8")
 (set-default-coding-systems 'utf-8-unix)
@@ -57,10 +71,6 @@ Otherwise the startup will be very slow."
 (defvar cache-dir "~/.emacs.d/cache/")
 (defvar user-dir "~/.emacs.d")
 (setq byte-compile-warnings '(not interactive-only)) ;报错滚吧
-(use-package quelpa
-  :config ; 在 (require) 之后需要执行的表达式
-  (use-package quelpa-use-package) ; 把 quelpa 嵌入 use-package 的宏扩展
-  (quelpa-use-package-activate-advice)) ; 启用这个 advice
 
 (use-package better-defaults)
 (use-package rime
@@ -78,13 +88,8 @@ Otherwise the startup will be very slow."
    rime-user-data-dir "~/.emacs.d/rime"))
 
 ;;; =====COMPLETION======
-;; company
-(use-package company
-  :ensure t
-  :hook (after-init . global-company-mode))
-;; vertico
+(global-completion-preview-mode t)
 (use-package vertico
-                                        ;  :defer t
   :custom
   (setq vertico-resize nil
         vertico-count 17
@@ -98,7 +103,6 @@ Otherwise the startup will be very slow."
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 (use-package consult
-                                        ;  :defer t
   :config
   (setq consult-project-function #'doom-project-root
         consult-narrow-key "<"
@@ -432,7 +436,8 @@ Otherwise the startup will be very slow."
   :commands evil-outer-xml-attr evil-inner-xml-attr)
 (use-package evil-quick-diff
   :defer t
-  :quelpa (evil-quick-diff :fetcher github :repo "rgrinberg/evil-quick-diff"))
+  :init (evil-quick-diff-install)
+  :straight (evil-quick-diff :host github :repo "rgrinberg/evil-quick-diff"))
 ;; format
 (defcustom +format-on-save-disabled-modes
   '(sql-mode           ; sqlformat is currently broken
@@ -498,6 +503,7 @@ Otherwise the startup will be very slow."
   :hook (dired-mode . diredfl-mode)
   :hook (dirvish-directory-view-mode . diredfl-mode))
 (use-package dired-x
+  :straight nil
   :defer t
   :ensure nil
   :hook (dired-mode . dired-omit-mode)
@@ -531,6 +537,7 @@ Otherwise the startup will be very slow."
             ("\\.html?\\'" ,cmd)
             ("\\.md\\'" ,cmd)))))
 (use-package dired-aux
+  :straight nil
   :ensure nil
   :defer t
   :init
@@ -605,6 +612,7 @@ Otherwise the startup will be very slow."
 (use-package vc :ensure nil
   :defer t)
 (use-package vc-annotate
+  :straight nil
   :defer t
   :ensure nil
   :config
@@ -627,7 +635,7 @@ Otherwise the startup will be very slow."
   :defer t)
 (use-package git-timemachine
   :defer t
-  :quelpa (git-timemachine :fetcher github :repo "emacsmirror/git-timemachine")
+  :straight (git-timemachine :host github :repo "emacsmirror/git-timemachine")
   :config
   (setq git-timemachine-show-minibuffer-details t)
   (with-eval-after-load 'evil
@@ -824,11 +832,7 @@ Otherwise the startup will be very slow."
 ;;;; =======lang======
 ;; ansible
 (use-package ansible
-  :defer t
-  :config
-  (setq ansible-section-face 'font-lock-variable-name-face
-        ansible-task-label-face 'font-lock-doc-face)
-  (add-to-list 'company-backends 'company-ansible))
+  :defer t)
 (use-package ansible-doc
   :defer t
   :config
@@ -841,15 +845,13 @@ Otherwise the startup will be very slow."
   (setq jinja2-enable-indent-on-save nil))
 (use-package yaml-mode
   :defer t)
-(use-package company-ansible
-  :defer t)
 
 ;;(agda +local)              ; types of types of types of types...
 (use-package agda2-mode
   :defer t
-  :quelpa (agda2-mode :fetcher github :repo "agda/agda"
-                      :files ("src/data/emacs-mode/*.el" (:exclude "agda-input.el"))
-                      :nonrecursive t))
+  :straight (agda2-mode :host github :repo "agda/agda"
+                        :files ("src/data/emacs-mode/*.el" (:exclude "agda-input.el"))
+                        :nonrecursive t))
 ;;(cc +lsp)         ; C > C++ == 1
 (use-package cmake-mode
   :defer t)
@@ -870,40 +872,17 @@ Otherwise the startup will be very slow."
 (use-package rainbow-delimiters
   :defer t)
 (use-package elisp-mode
+  :straight nil
   :defer t
   :ensure nil
   :mode ("\\.Cask\\'" . emacs-lisp-mode)
   :config
   (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
   (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode))
-(use-package ielm
-  :defer t
-  :config
-  (setq ielm-font-lock-keywords
-        (append '(("\\(^\\*\\*\\*[^*]+\\*\\*\\*\\)\\(.*$\\)"
-                   (1 font-lock-comment-face)
-                   (2 font-lock-constant-face)))
-                (when (require 'highlight-numbers nil t)
-                  (highlight-numbers--get-regexp-for-mode 'emacs-lisp-mode))
-                (cl-loop for (matcher . match-highlights)
-                         in (append lisp-el-font-lock-keywords-2
-                                    lisp-cl-font-lock-keywords-2)
-                         collect
-                         `((lambda (limit)
-                             (when ,(if (symbolp matcher)
-                                        `(,matcher limit)
-                                      `(re-search-forward ,matcher limit t))
-                               ;; Only highlight matches after the prompt
-                               (> (match-beginning 0) (car comint-last-prompt))
-                               ;; Make sure we're not in a comment or string
-                               (let ((state (syntax-ppss)))
-                                 (not (or (nth 3 state)
-                                          (nth 4 state))))))
-                           ,@match-highlights)))))
 (use-package highlight-quoted
   :defer t)
 (use-package helpful
-  :ensure t
+  :defer t
   :init
   (global-set-key (kbd "C-h f") #'helpful-callable)
 
@@ -922,15 +901,6 @@ Otherwise the startup will be very slow."
   :config
   (evil-set-initial-state '(helpful-mode) 'emacs)
   )
-
-(use-package macrostep)
-:defer t
-(use-package overseer)
-:defer t
-;;;###package overseer
-(autoload 'overseer-test "overseer" nil t)
-;; Properly lazy load overseer by not loading it so early:
-(remove-hook 'emacs-lisp-mode-hook #'overseer-enable-mode)
 
 (use-package elisp-def
   :defer t)
@@ -979,7 +949,7 @@ Otherwise the startup will be very slow."
                 "<script id='MathJax-script' async src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'></script>"
                 "<script src='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js'></script>"
                 "<script>document.addEventListener('DOMContentLoaded', () => { document.body.classList.add('markdown-body'); document.querySelectorAll('pre[lang] > code').forEach((code) => { code.classList.add(code.parentElement.lang); }); document.querySelectorAll('pre > code').forEach((code) => { hljs.highlightBlock(code); }); });</script>")))
-(use-package markdown-toc)
+(use-package markdown-toc :defer t)
 ;;nix               ; I hereby declare "nix geht mehr!"
 ;;ocaml             ; an objective camel
 ;;(org +dragndrop +journal +hugo +present +pomodoro)               ; contacts 与 jupyter 还没相活
@@ -989,15 +959,11 @@ Otherwise the startup will be very slow."
   :defer t)
 (use-package ox-clip
   :defer t)
-(use-package gnuplot
-  :defer t)
-(use-package gnuplot-mode
-  :defer t)
 (use-package centered-window
   :defer t)
 (use-package revealjs
   :defer t
-  :quelpa (revealjs :fetcher github :repo "hakimel/reveal.js" :files ("css" "dist" "js" "plugin")))
+  :straight (revealjs :host github :repo "hakimel/reveal.js" :files ("css" "dist" "js" "plugin")))
 (use-package ob-async
   :defer t)
 (use-package ox-pandoc
@@ -1061,30 +1027,30 @@ Otherwise the startup will be very slow."
 ;;       :bind (([remap next] . good-scroll-up-full-screen)
 ;;              ([remap prior] . good-scroll-down-full-screen))))good-scroll)
 ;; (use-package alert ; 可惜不支持中文
-;;   :quelpa (:fetcher github :repo "jwiegley/alert"))
+;;   :straight (:host github :repo "jwiegley/alert"))
 (use-package grip-mode
   :defer t)
 (use-package ox-gfm
   :defer t
-  :quelpa (:fetcher github
-                    :repo "larstvei/ox-gfm"
-                    :files ("*.el")))
+  :straight (:host github
+                   :repo "larstvei/ox-gfm"
+                   :files ("*.el")))
 (use-package helm-bibtex
   :defer t)
 
 ;; When using bibtex-completion via the `biblio` module
 (use-package ob-powershell
   :defer t
-  :quelpa (:fetcher github :repo "rkiggen/ob-powershell"))
+  :straight (:host github :repo "rkiggen/ob-powershell"))
 (use-package bison-mode
   :defer t
-  :quelpa (:fetcher github :repo "Wilfred/bison-mode" :files ("*.el")))
+  :straight (:host github :repo "Wilfred/bison-mode" :files ("*.el")))
 (use-package flex-mode
   :defer t
-  :quelpa (:fetcher github :repo "manateelazycat/flex" :files ("*.el")))
+  :straight (:host github :repo "manateelazycat/flex" :files ("*.el")))
 (use-package j-mode
   :defer t
-  :quelpa (:fetcher github :repo "LdBeth/j-mode" :files ("*.el")))
+  :straight (:host github :repo "LdBeth/j-mode" :files ("*.el")))
 (use-package anki-editor
   :defer t)
 ;;;; ============= CONFIG =============
@@ -1110,7 +1076,7 @@ Otherwise the startup will be very slow."
 (setq-default cursor-type 'hollow)
 (setq default-frame-alist
       (append ;                        Note: if there are any conflicting settings in ‘default-frame-alist’, it is the one that comes first that gets applied.
-       '(;(undecorated . t)
+       '((undecorated-round . t)
          (drag-internal-border . t)
          (internal-border-width . 4))
        default-frame-alist))
@@ -1298,10 +1264,15 @@ Otherwise the startup will be very slow."
 (use-package elfeed
   :ensure t
   :config
+  (setq elfeed-curl-extra-arguments '("-xhttp://localhost:7890"))
+  (setf url-queue-timeout 30)
+  (setf elfeed-set-max-connections 1)
   (evil-set-initial-state 'elfeed-search-mode 'emacs)
   (evil-set-initial-state 'elfeed-show-mode 'emacs))
 (use-package elfeed-org
   :ensure t
   :init (elfeed-org))
+(setopt show-paren-context-when-offscreen t
+        blink-matching-paren-highlight-offscreen t)
 (require 'init-org)
 (message "emacs init time %s" (emacs-init-time))
