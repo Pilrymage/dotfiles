@@ -6,13 +6,13 @@
 ** 英文博客
 *** https://www.chiark.greenend.org.uk/~sgtatham/quasiblog/feed.xml
 ** 英文论坛
-*** [[https://hnfront.buzzing.cc/feed.xml][Hacker News 首页]]
-** 社交网站
+*** [[https://hnfront.buzzing.cc/feed.xml][Hacker News 首页]]                                                   :essence:
+** 社交网站                                                               :社交:
 *** [[https://linux.do/latest.rss][LINUX DO]]
-*** [[https://emacs-china.org/latest.rss][Emacs China]]
+*** [[https://emacs-china.org/latest.rss][Emacs China]]                                                        :essence:
 *** [[https://www.v2ex.com/feed/tab/tech.xml][V2EX]]
-*** [[https://sspai.com/feed][少数派]]
-** 中文博客
+*** [[https://sspai.com/feed][少数派]]                                                             :essence:
+** 中文博客                                                            :essence:
 *** [[https://feeds.feedburner.com/chitsaou][鴨七・chitsaou]]
 *** [[https://www.raychase.net/feed][四火的唠叨]]
 *** [[http://feeds.feedburner.com/ruanyifeng][阮一峰的网络日志]]
@@ -21,7 +21,7 @@
 ** Telegram
 *** [[https://rsshub.email-once.com/telegram/channel/jnu983][暨南報社 - Telegram]]
 *** [[https://rsshub.email-once.com/telegram/channel/douban_read][豆瓣精选 - Telegram]]
-*** [[https://rsshub.email-once.com/telegram/channel/wxbyg][微信搬运工 - Telegram]]
+*** [[https://rsshub.email-once.com/telegram/channel/wxbyg][微信搬运工 - Telegram]]                                              :essence:
 *** [[https://rsshub.email-once.com/telegram/channel/jike_collection][即刻精选 - Telegram]]
 *** [[https://rsshub.email-once.com/telegram/channel/zhihu_bazaar][知乎大巴扎 - Telegram]]                                               :ignore:
 *** [[https://rsshub.email-once.com/telegram/channel/fucku_idiot][简中互联网废物大赏 - Telegram]]                                       :ignore:
@@ -29,7 +29,7 @@
 ** Reddit
 *** [[https://old.reddit.com/r/emacs/.rss][r/Emacs]]
 *** [[https://old.reddit.com/r/hackintosh/.rss][r/Hackintosh]]
-** 知乎
+** 知乎                                                                   :essence:
 文章：https://rsshub.email-once.com/zhihu/posts/people/<用户名>
 动态：https://rsshub.email-once.com/zhihu/people/activities/<用户名>
 *** [[https://rsshub.email-once.com/zhihu/people/activities/shinkusama][真紅家的水銀燈]]
@@ -94,3 +94,5 @@
 *** [[https://rsshub.email-once.com/zhihu/posts/people/tuo-qia-ma-ke-zhi-guan][托卡马克之冠]]
 *** [[https://rsshub.email-once.com/zhihu/posts/people/ldbeth][LdBeth]]
 *** [[https://rsshub.email-once.com/zhihu/posts/people/be5invis][Belleve]]
+*** [[https://rsshub.email-once.com/zhihu/posts/people/he-jie-ming-7][摩砂学]]
+*** [[https://rsshub.email-once.com/zhihu/posts/people/nan-jue-tu][男爵兔]]

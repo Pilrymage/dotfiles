@@ -739,18 +739,6 @@ Otherwise the startup will be very slow."
   :defer t)
 ;;tree-sitter       ; syntax and parsing, sitting in a tree...
 (defvar +tree-sitter-hl-enabled-modes '(not web-mode typescript-tsx-mode))
-(use-package tree-sitter-langs
-  :defer t)
-(use-package tree-sitter
-  :defer t
-  :config
-  (require 'tree-sitter-langs)
-  ;; This makes every node a link to a section of code
-  (setq tree-sitter-debug-jump-buttons t
-        ;; and this highlights the entire sub tree in your code
-        tree-sitter-debug-highlight-jump-region t))
-(use-package tree-sitter-indent
-  :defer t)
 ;;upload            ; map local to remote projects via ssh/ftp
 (use-package ssh-deploy
   :defer t
@@ -885,7 +873,6 @@ Otherwise the startup will be very slow."
   :defer t
   :init
   (global-set-key (kbd "C-h f") #'helpful-callable)
-
   (global-set-key (kbd "C-h v") #'helpful-variable)
   (global-set-key (kbd "C-h k") #'helpful-key)
   (global-set-key (kbd "C-h x") #'helpful-command)
@@ -899,7 +886,7 @@ Otherwise the startup will be very slow."
   ;; already links to the manual, if a function is referenced there.
   (global-set-key (kbd "C-h F") #'helpful-function)
   :config
-  (evil-set-initial-state '(helpful-mode) 'emacs)
+  (evil-set-initial-state 'helpful-mode 'emacs)
   )
 
 (use-package elisp-def
@@ -1272,6 +1259,7 @@ Otherwise the startup will be very slow."
 (use-package elfeed-org
   :ensure t
   :init (elfeed-org))
+(use-package rust-mode)
 (setopt show-paren-context-when-offscreen t
         blink-matching-paren-highlight-offscreen t)
 (require 'init-org)

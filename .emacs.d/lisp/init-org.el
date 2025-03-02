@@ -140,9 +140,10 @@
   (setq my/evil-org-binding
         '(("SPC n a" . org-toggle-narrow-to-subtree)
           ("SPC n A" . org-tree-to-indirect-buffer)
+          ("SPC n c" . org-cliplink)
           ("SPC n n" . denote)
           ("SPC n d" . denote-sort-dired)
-          ("SPC n i" . org-cliplink)
+          ("SPC n i" . org-insert-link)
           ("SPC n l" . denote-link)
           ("SPC n L" . denote-add-links)
           ("SPC n b" . denote-backlinks)
