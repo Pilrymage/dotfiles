@@ -129,6 +129,8 @@
   :defer t)
 (use-package ox-pandoc
   :defer t)
+(use-package ox-hugo
+  :after ox)
 (use-package denote
   :bind
   :config
@@ -180,5 +182,9 @@
 ;; (setq org-journal-file-format (concat "%Y-" chinese-year-now)) ; 把年份加入文件名
 (setq org-journal-date-format "%Y/%m/%d W%W D%j（%a）")
 (format-time-string "%Y/%m/%d W%W D%j (%a)")
+
+;; 用于 Windows 的 Latex
+(setq temporary-file-directory "C:/Users/pilrymage/AppData/Local/Temp/")
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
 (provide 'init-org)
 ;; Babel
