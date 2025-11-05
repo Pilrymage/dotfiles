@@ -1,0 +1,6 @@
+# 非 Windows 下忽略这些仅 Windows 用到的目标
+{{ if ne .chezmoi.os "windows" -}}
+AppData/**
+Documents/PowerShell/**
+Documents/WindowsPowerShell/**
+{{- end }}
