@@ -1,0 +1,32 @@
+# encoding: utf-8
+
+---
+name: "huma_trad"
+version: "20230421"
+sort: original
+columns:
+  - text
+  - code
+  - stem
+import_tables:
+  - huma.short
+  - huma.short.extended
+  - huma.short.phrase
+  - huma.short.punct
+  - huma.char
+  - huma.phrase
+  - huma.extended
+encoder:
+  exclude_patterns:
+    - '^[a-z]$'  # 一简不参与造词
+    - '[^a-z]'
+  rules:
+    - length_equal: 2
+      formula: "AaAbBaBb"
+    - length_equal: 3
+      formula: "AaBaCaCb"
+    - length_in_range: [4, 20]
+      formula: "AaBaCaZa"
+...
+
+
