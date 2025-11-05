@@ -34,18 +34,18 @@
          (string-trim
           (shell-command-to-string (format "%s locate" agda-mode))))))))
 ;;(cc +lsp)         ; C > C++ == 1
-(use-package cmake-mode
-  :defer t)
-(use-package cuda-mode
-  :defer t)
-(use-package demangle-mode
-  :defer t)
-(use-package disaster
-  :defer t)
-(use-package opencl-c-mode
-  :defer t)
-(use-package ccls
-  :defer t)
+;; (use-package cmake-mode
+;;   :defer t)
+;; (use-package cuda-mode
+;;   :defer t)
+;; (use-package demangle-mode
+;;   :defer t)
+;; (use-package disaster
+;;   :defer t)
+;; (use-package opencl-c-mode
+;;   :defer t)
+;; (use-package ccls
+;;   :defer t)
 
 (use-package rust-mode
   :defer t)

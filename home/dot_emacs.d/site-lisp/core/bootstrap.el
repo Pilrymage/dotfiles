@@ -1,4 +1,4 @@
-;;; core/bootstrap.el --- Bootstrapping helpers -*- lexical-binding: nil; -*-
+;;; core/bootstrap.el --- Bootstrapping helpers -*- lexical-binding: t; -*-
 
 (defconst core-site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory)
   "Root directory that contains custom site-lisp modules.")
@@ -10,10 +10,12 @@
 (setq gc-cons-threshold most-positive-fixnum)
 
 (defvar bootstrap-version)
-(let* ((straight-base-dir (or (bound-and-true-p straight-base-dir)
-                              (expand-file-name "straight/" user-emacs-directory)))
-       (bootstrap-file (expand-file-name "repos/straight.el/bootstrap.el" straight-base-dir))
-       (bootstrap-version 7))
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
