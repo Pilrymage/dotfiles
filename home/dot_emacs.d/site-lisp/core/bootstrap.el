@@ -1,4 +1,4 @@
-;;; core/bootstrap.el --- Bootstrapping helpers -*- lexical-binding: t; -*-
+;;; core/bootstrap.el --- Bootstrapping helpers -*- lexical-binding: nil; -*-
 
 (defconst core-site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory)
   "Root directory that contains custom site-lisp modules.")
@@ -51,6 +51,6 @@
           (lambda ()
             (setq gc-cons-threshold core--default-gc-cons-threshold)))
 
-(provide 'core-bootstrap)
+(provide 'bootstrap)
 
-;;; core-bootstrap.el ends here
+;;; core/bootstrap.el ends here

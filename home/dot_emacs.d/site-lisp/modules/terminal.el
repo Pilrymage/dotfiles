@@ -82,6 +82,6 @@
 (use-package consult-lsp
   :defer t)
 
-(provide 'modules-terminal)
+(provide 'terminal)
 
 ;;; modules/terminal.el ends here

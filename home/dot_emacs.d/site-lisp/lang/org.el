@@ -192,7 +192,7 @@
 (provide 'init-org)
 ;; Babel
 
-(provide 'lang-org)
+(provide 'org)
 
 ;;; lang/org.el ends here
 

@@ -14,7 +14,7 @@
   :defer t
   :init (elfeed-org))
 
-(provide 'modules-apps)
+(provide 'apps)
 
 ;;; modules/apps.el ends here
 

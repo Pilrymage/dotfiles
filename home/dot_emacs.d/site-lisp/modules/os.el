@@ -16,6 +16,6 @@
 (use-package kkp
   :defer t
   :hook (after-init . global-kkp-mode))
-(provide 'modules-os)
+(provide 'os)
 
 ;;; modules/os.el ends here

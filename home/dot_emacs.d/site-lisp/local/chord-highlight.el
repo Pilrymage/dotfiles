@@ -64,6 +64,6 @@
 
 (provide 'chord-highlight-mode)
 
-(provide 'local-chord-highlight)
+(provide 'chord-highlight)
 
 ;;; local/chord-highlight.el ends here

@@ -187,6 +187,6 @@
       auto-window-vscroll nil
       scroll-preserve-screen-position t)
 
-(provide 'modules-ui)
+(provide 'ui)
 
 ;;; modules/ui.el ends here

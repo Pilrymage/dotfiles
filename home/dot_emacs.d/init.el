@@ -16,18 +16,24 @@
                 "site-lisp/local"))
   (add-to-list 'load-path (expand-file-name path user-emacs-directory)))
 
-(require 'core-bootstrap)
-(require 'core-options)
+; core
+(require 'bootstrap)
+(require 'options)
 
-(require 'modules-completion)
-(require 'modules-ui)
-(require 'modules-editor)
-(require 'modules-terminal)
-(require 'modules-os)
-(require 'modules-apps)
-(require 'lang-general)
-(require 'lang-org)
-(require 'local-chord-highlight)
+; modules
+(require 'completion)
+(require 'ui)
+(require 'editor)
+(require 'terminal)
+(require 'os)
+(require 'apps)
+
+; lang
+(require 'general)
+(require 'org)
+
+; local
+(require 'chord-highlight)
 
 (message "emacs init time %s" (emacs-init-time))
 

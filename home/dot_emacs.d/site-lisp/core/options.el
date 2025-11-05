@@ -49,6 +49,6 @@
 
 (use-package better-defaults)
 
-(provide 'core-options)
+(provide 'options)
 
 ;;; core/options.el ends here

@@ -468,6 +468,6 @@
 (setq show-paren-style 'mixed)
 (setopt show-paren-context-when-offscreen t
         blink-matching-paren-highlight-offscreen t)
-(provide 'modules-editor)
+(provide 'editor)
 
 ;;; modules/editor.el ends here

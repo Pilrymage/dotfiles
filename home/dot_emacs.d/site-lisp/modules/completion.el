@@ -73,6 +73,6 @@
   :config
   (add-hook 'kill-emacs-hook #'posframe-delete-all))
 
-(provide 'modules-completion)
+(provide 'completion)
 
 ;;; modules/completion.el ends here

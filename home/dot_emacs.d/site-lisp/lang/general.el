@@ -190,6 +190,6 @@
   :defer t
   :straight (:host github :repo "LdBeth/j-mode" :files ("*.el")))
 (use-package anki-editor :defer t)
-(provide 'lang-general)
+(provide 'general)
 
 ;;; lang/general.el ends here
