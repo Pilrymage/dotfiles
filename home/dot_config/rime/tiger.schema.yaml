@@ -33,7 +33,7 @@ switches: # 0 默认关，1 默认开
   #   states: [ gb2312, GBK, UTF-8 ]
   #   reset: 0
   - name: simplification  #简转繁滤镜
-    reset: 0
+    reset: 1
     states: [ 简中, 繁中 ]
   - options: [_keyboard_default, _keyboard_defaultbk, _keyboard_defaultwk]
     reset: 0
