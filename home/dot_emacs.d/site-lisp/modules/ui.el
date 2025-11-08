@@ -19,8 +19,8 @@
 (defun modules-ui-setup-fonts ()
   "Configure default fonts for the current frame."
   (when (display-graphic-p)
-    (cl-loop for font in '("Iosevka Term")
-             thereis (set-face-attribute 'default nil :family font :height 220))
+    (cl-loop for font in '("Iosevka Nerd Font Mono")
+             thereis (set-face-attribute 'default nil :family font :height 160))
     (cl-loop for font in '("Segoe UI Symbol" "Symbola" "Symbol")
              thereis (if (< emacs-major-version 27)
                          (set-fontset-font "fontset-default" 'unicode font nil 'prepend)
@@ -33,7 +33,7 @@
                        (set-fontset-font t 'symbol (font-spec :family font) nil 'prepend))
                       (t
                        (set-fontset-font t 'emoji (font-spec :family font) nil 'prepend))))
-    (cl-loop for font in '("LXGW WenKai Mono")
+    (cl-loop for font in '("LXGW WenKai Mono TC")
              thereis (set-fontset-font t 'han (font-spec :family font)))))
 
 (modules-ui-setup-fonts)
