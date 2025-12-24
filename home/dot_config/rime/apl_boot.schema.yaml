@@ -67,9 +67,9 @@ key_binder:
 
 editor:
   bindings:
-    Return: confirm
+    Return: commit_raw_input
     Tab: confirm
-    space: commit_raw_input
+    space: confirm
 
 recognizer:
   import_preset: default
@@ -77,9 +77,9 @@ recognizer:
 ascii_composer:
   good_old_caps_lock: true
   switch_key:
-    Shift_L: noop
+    Shift_L: inline_ascii
     Shift_R: noop
-    Control_L: inline_ascii
+    Control_L: noop
     Control_R: commit_text
     Caps_Lock: clear
 
