@@ -1,0 +1,12 @@
+# chezmoi.toml.tmpl
+[edit]
+    command = "code"
+    args = ["--wait"]
+
+[diff]
+    {{ if eq .chezmoi.os "windows" }}
+    command = "code"
+    args = ["--wait", "--diff"]
+    {{ else }}
+    command = "delta"
+    {{ end }}
