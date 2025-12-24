@@ -5,11 +5,19 @@
 ;; Prevent flashing of the modeline during startup.
 (setq-default mode-line-format nil)
 
-(use-package doom-themes
-  :config
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
-  (load-theme 'doom-city-lights t))
+(load-theme 'modus-operandi-deuteranopia t)
+
+;; Vertical window divider
+(use-package frame
+  :straight (:type built-in)
+  :custom
+  (window-divider-default-right-width 12)
+  (window-divider-default-bottom-width 1)
+  (window-divider-default-places 'right-only)
+  (window-divider-mode t))
+;; Make sure new frames use window-divider
+(add-hook 'before-make-frame-hook 'window-divider-mode)
+
 
 (use-package emojify
   :hook (after-init . global-emojify-mode)
@@ -19,7 +27,7 @@
 (defun modules-ui-setup-fonts ()
   "Configure default fonts for the current frame."
   (when (display-graphic-p)
-    (cl-loop for font in '("Iosevka Nerd Font Mono")
+    (cl-loop for font in '("Iosevka Term")
              thereis (set-face-attribute 'default nil :family font :height 160))
     (cl-loop for font in '("Segoe UI Symbol" "Symbola" "Symbol")
              thereis (if (< emacs-major-version 27)
@@ -119,11 +127,6 @@
   :defer t
   :bind (("s-i" . blamer-show-commit-info)
          ("C-c i" . blamer-show-posframe-commit-info))
-  :custom-face
-  (blamer-face ((t :foreground "#7a88cf"
-                   :background nil
-                   :height 140
-                   :italic t)))
   :config
   (setq blamer-idle-time 0.3
         blamer-min-offset 20

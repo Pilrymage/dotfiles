@@ -30,7 +30,7 @@
 
 ; lang
 (require 'general)
-(require 'org)
+(require 'lang-org)
 
 ; local
 (require 'chord-highlight)
