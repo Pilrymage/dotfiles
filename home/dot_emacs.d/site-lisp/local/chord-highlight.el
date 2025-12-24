@@ -1,12 +1,12 @@
 ;;; local/chord-highlight.el --- Highlight chords -*- lexical-binding: t; -*-
 
 (defvar chord-highlight-keywords
-  '(("\\bIIIm\\b\\|\\bIII\\b\\|\\bV\\b" . 'chord-red-face)
-    ("\\bIV\\b\\|\\bIIm\\b\\|\\bII\\b" . 'chord-orange-face)
-    ("\\bI\\b\\|\\bVIm\\b\\|\\bVI\\b" . 'chord-green-face)
-    ("\\bVm\\b" . 'chord-dark-red-face)
-    ("\\bIVm\\b" . 'chord-dark-orange-face)
-    ("\\bIm\\b" . 'chord-dark-green-face)
+  '(("\\bIIImΔ?7?\\b\\|\\bIIIΔ?7?\\b\\|\\bVΔ?7?\\b" . 'chord-red-face)
+    ("\\bIVΔ?7?\\b\\|\\bIImΔ?7?\\b\\|\\bIIΔ?7?\\b" . 'chord-orange-face)
+    ("\\bIΔ?7?\\b\\|\\bVImΔ?7?\\b\\|\\bVIΔ?7?\\b" . 'chord-green-face)
+    ("\\bVmΔ?7?\\b" . 'chord-dark-red-face)
+    ("\\bIVmΔ?7?\\b" . 'chord-dark-orange-face)
+    ("\\bImΔ?7?\\b" . 'chord-dark-green-face)
     ("-..X>" . 'chord-bad-face)
     ("2↑\\|3↑\\|5↑\\|2↓\\|3↓\\|5↓" . 'chord-black-face)
     ))
