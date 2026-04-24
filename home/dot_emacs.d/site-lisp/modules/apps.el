@@ -3,7 +3,7 @@
 (use-package elfeed
   :defer t
   :config
-  (setq elfeed-curl-extra-arguments '("-xhttp://localhost:7890"))
+  (setq elfeed-curl-extra-arguments '("-xhttp://localhost:7897"))
   (setf url-queue-timeout 30
         elfeed-set-max-connections 1)
   (with-eval-after-load 'evil
