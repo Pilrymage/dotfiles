@@ -443,6 +443,12 @@
     (keymap-set evil-motion-state-map "SPC m s" #'bookmark-set)
     (keymap-set evil-motion-state-map "SPC m l" #'list-bookmarks)
     (keymap-set evil-motion-state-map "SPC m j" #'bookmark-jump)
+    (keymap-set evil-motion-state-map "SPC h f" #'helpful-callable)
+    (keymap-set evil-motion-state-map "SPC h v" #'helpful-variable)
+    (keymap-set evil-motion-state-map "SPC h k" #'helpful-key)
+    (keymap-set evil-motion-state-map "SPC h x" #'helpful-command)
+    (keymap-set evil-motion-state-map "SPC h d" #'helpful-at-point)
+    (keymap-set evil-motion-state-map "SPC h F" #'helpful-function)
     (keymap-set evil-motion-state-map "SPC r" #'recentf)
     (keymap-set evil-motion-state-map "SPC `" #'vterm)))
 
