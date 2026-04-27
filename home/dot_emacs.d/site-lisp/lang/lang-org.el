@@ -157,14 +157,14 @@
    'append)
   (when (fboundp 'font-lock-flush) (font-lock-flush))
   (when (fboundp 'font-lock-ensure) (font-lock-ensure)))
-  (add-hook 'org-mode-hook #'my/org-bullets-enable)
+(add-hook 'org-mode-hook #'my/org-bullets-enable)
 (use-package org-superstar
   :defer t
   :hook (org-mode . org-superstar-mode)
   :config
   (setq org-superstar-headline-bullets-list '("●" "○" "◆" "◇" "►" "▸")
-           org-superstar-item-bullet-alist
-           '((?* . ?•) (?+ . ?◦) (?- . ?▪ ))))
+        org-superstar-item-bullet-alist
+        '((?* . ?•) (?+ . ?◦) (?- . ?▪ ))))
 (use-package centered-window
   :defer t)
 ;; Presentation
@@ -226,34 +226,27 @@
 (use-package org-fragtog
   :ensure t
   :hook (org-mode . org-fragtog-mode))
-(use-package denote
-  :bind
-  :config
-  (setq denote-directory (expand-file-name "~/Dropbox/denote")
-        denote-sort-keywords nil
-        denote-backlinks-show-context t
-        denote-known-keywords '("项目" "领域" "资源" "归档")
-        denote-file-type nil)
-  (setq my/evil-org-binding
-        '(("SPC n a" . org-toggle-narrow-to-subtree)
-          ("SPC n A" . org-tree-to-indirect-buffer)
-          ("SPC n c" . org-cliplink)
-          ("SPC n n" . denote)
-          ("SPC n d" . denote-sort-dired)
-          ("SPC n f" . org-footnote-new)
-          ("SPC n i" . org-insert-link)
-          ("SPC n l" . denote-link)
-          ("SPC n L" . denote-add-links)
-          ("SPC n b" . denote-backlinks)
-          ("SPC n o" . denote-open-or-create)
-          ("SPC n p" . org-download-clipboard)
-          ("SPC n q" . org-set-tags-command)
-          ("SPC n r" . denote-rename-file)
-          ("SPC n R" . denote-rename-file-using-front-matter)
-          ("SPC n t" . org-todo)))
-  (with-eval-after-load 'evil
-    (dolist (pair my/evil-org-binding)
-      (evil-define-key 'normal org-mode-map (kbd (car pair)) (cdr pair)))))
+
+(setq my/evil-org-binding
+      '(("SPC n a" . org-toggle-narrow-to-subtree)
+        ("SPC n A" . org-tree-to-indirect-buffer)
+        ("SPC n c" . org-cliplink)
+        ("SPC n n" . denote)
+        ("SPC n d" . denote-sort-dired)
+        ("SPC n f" . org-footnote-new)
+        ("SPC n i" . org-insert-link)
+        ("SPC n l" . denote-link)
+        ("SPC n L" . denote-add-links)
+        ("SPC n b" . denote-backlinks)
+        ("SPC n o" . denote-open-or-create)
+        ("SPC n p" . org-download-clipboard)
+        ("SPC n q" . org-set-tags-command)
+        ("SPC n r" . denote-rename-file)
+        ("SPC n R" . denote-rename-file-using-front-matter)
+        ("SPC n t" . org-todo)))
+(with-eval-after-load 'evil
+  (dolist (pair my/evil-org-binding)
+    (evil-define-key 'normal org-mode-map (kbd (car pair)) (cdr pair))))
 
 (setq org-startup-numerated t)          ; 设置 org 目录编号
 ;; (setq org-tempo-keywords-alist ; org 模板，其他语言
@@ -292,15 +285,15 @@
   ;; 2. 重新加入一个干净的、专为 xelatex 定制的 dvisvgm 节点
   (add-to-list 'org-preview-latex-process-alist
                '(imagemagick
-                  :programs ("xelatex" "magick" "gswin64c")
-                  :description "pdf > png"
-                  :message
-                  "you need to install the programs: xelatex and imagemagick."
-                  :image-input-type "pdf" :image-output-type "png"
-                  :image-size-adjust (1.0 . 1.0) :latex-compiler
-                  ("xelatex -interaction nonstopmode -output-directory %o %f")
-                  :image-converter
-                  ("magick -density %D %f -trim -antialias -quality 100 %O"))))
+                 :programs ("xelatex" "magick" "gswin64c")
+                 :description "pdf > png"
+                 :message
+                 "you need to install the programs: xelatex and imagemagick."
+                 :image-input-type "pdf" :image-output-type "png"
+                 :image-size-adjust (1.0 . 1.0) :latex-compiler
+                 ("xelatex -interaction nonstopmode -output-directory %o %f")
+                 :image-converter
+                 ("magick -density %D %f -trim -antialias -quality 100 %O"))))
 
 (modify-syntax-entry ?> "w" org-mode-syntax-table)
 (modify-syntax-entry ?> "w" org-mode-syntax-table)

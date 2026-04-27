@@ -186,9 +186,6 @@
 (use-package flex-mode
   :defer t
   :straight (:host github :repo "manateelazycat/flex" :files ("*.el")))
-(use-package j-mode
-  :defer t
-  :straight (:host github :repo "LdBeth/j-mode" :files ("*.el")))
 (use-package anki-editor :defer t)
 (provide 'general)
 
