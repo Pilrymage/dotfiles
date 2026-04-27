@@ -2,8 +2,8 @@
 
 (setq url-proxy-services
       '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
-        ("http" . "127.0.0.1:7890")
-        ("https" . "127.0.0.1:7890")))
+        ("http" . "127.0.0.1:7897")
+        ("https" . "127.0.0.1:7897")))
 
 (setq package-archives '(("gnu"    . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
                          ("nongnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
@@ -16,11 +16,11 @@
                 "site-lisp/local"))
   (add-to-list 'load-path (expand-file-name path user-emacs-directory)))
 
-; core
+                                        ; core
 (require 'bootstrap)
 (require 'options)
 
-; modules
+                                        ; modules
 (require 'completion)
 (require 'ui)
 (require 'editor)
@@ -28,11 +28,11 @@
 (require 'os)
 (require 'apps)
 
-; lang
+                                        ; lang
 (require 'general)
 (require 'lang-org)
 
-; local
+                                        ; local
 (require 'chord-highlight)
 
 (message "emacs init time %s" (emacs-init-time))
