@@ -17,6 +17,8 @@
   (window-divider-mode t))
 ;; Make sure new frames use window-divider
 (add-hook 'before-make-frame-hook 'window-divider-mode)
+(if (not (eq system-type 'darwin))
+    (setq default-frame-alist '((undecorated . t))))
 
 
 (use-package emojify

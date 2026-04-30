@@ -274,7 +274,9 @@
 (format-time-string "%Y/%m/%d W%W D%j (%a)")
 
 ;; 用于 Windows 的 Latex
-(setq temporary-file-directory "C:/Users/pilrymage/AppData/Local/Temp/")
+(if (eq system-type 'ms-dos)
+    (setq temporary-file-directory "C:/Users/pilrymage/AppData/Local/Temp/"))
+
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
 (setq org-preview-latex-default-process 'imagemagick)
 (with-eval-after-load 'org
