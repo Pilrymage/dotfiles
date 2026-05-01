@@ -3,6 +3,9 @@
 (when (fboundp 'global-completion-preview-mode)
   (global-completion-preview-mode +1))
 
+;; 不使用横向的选框而是使用 vertico 纵向选择
+(ido-mode -1)
+
 (use-package vertico
   :init
   (vertico-mode)
@@ -61,7 +64,8 @@
   :defer t)
 
 (use-package marginalia
-  :hook (after-init . marginalia-mode))
+  :init
+  (marginalia-mode))
 
 (use-package wgrep
   :defer t

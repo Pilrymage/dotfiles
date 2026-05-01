@@ -14,8 +14,15 @@
   :custom
   (default-input-method "rime")
   :config
-  (if (eq system-type 'darwin)
+  ;; macOS 自行下载 librime
+  (if (eq system-type 'darwin) 
       (rime-librime-root (expand-file-name "librime/dist" user-emacs-directory)))
+  ;; Windows 解决 rimeapi
+  (if (eq system-type 'windows-nt)
+      (setq rime-librime-root "~/scoop/apps/librime/current")) 
+  ;; Windows 解决 emacs 路径
+  (if (eq system-type 'windows-nt)
+      (setq rime-emacs-module-header-root "~/scoop/apps/emacs/current/include/")) 
   (global-set-key (kbd "`") #'rime-inline-ascii)
   (setq rime-inline-ascii-holder ?x
         rime-share-data-dir (expand-file-name "rime" user-emacs-directory)
