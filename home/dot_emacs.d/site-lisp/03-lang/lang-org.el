@@ -1,5 +1,6 @@
 ;;; lang/org.el --- Org-mode setup -*- lexical-binding: t; -*-
 
+;; 
 (use-package org
   :bind (("C-c r" . denote-dired-rename-files)
          :map dired-mode-map)
@@ -13,6 +14,7 @@
     (define-key org-mode-map (kbd "SPC") nil))
 
 
+  ;; 在 org mode 中添加无序列表和有序列表的颜色
   (font-lock-add-keywords
    'org-mode
    '(("^\\( *[-+*]\\) " 1 'org-level-1 prepend)  ;; Unordered lists
@@ -93,7 +95,13 @@
 (use-package gnuplot-mode
   :defer t)
 (use-package org-journal
-  :defer t)
+  :ensure t
+  :config
+  (setq org-journal-file-type 'yearly)    ; 就要一年的
+  (setq org-journal-date-format "%Y/%m/%d W%W D%j（%a）")
+  (setq org-journal-dir "d:/github/notes.org")
+  (setq org-journal-file-format "%Y")
+  )
 (use-package org-noter
   :defer t)
 
@@ -209,7 +217,9 @@
   :after ox)
 (use-package cdlatex
   :ensure t
-  :hook (org-mode . turn-on-org-cdlatex))
+  :hook (org-mode . turn-on-org-cdlatex)
+  )
+
 (use-package auctex
   :ensure t)
 (use-package org-appear
@@ -226,23 +236,17 @@
 (use-package org-fragtog
   :ensure t
   :hook (org-mode . org-fragtog-mode))
-
 (setq my/evil-org-binding
       '(("SPC n a" . org-toggle-narrow-to-subtree)
         ("SPC n A" . org-tree-to-indirect-buffer)
         ("SPC n c" . org-cliplink)
-        ("SPC n n" . denote)
-        ("SPC n d" . denote-sort-dired)
+        ("SPC n C" . org-capture)
         ("SPC n f" . org-footnote-new)
+        ("SPC n g" . org-goto)
         ("SPC n i" . org-insert-link)
-        ("SPC n l" . denote-link)
-        ("SPC n L" . denote-add-links)
-        ("SPC n b" . denote-backlinks)
-        ("SPC n o" . denote-open-or-create)
         ("SPC n p" . org-download-clipboard)
         ("SPC n q" . org-set-tags-command)
-        ("SPC n r" . denote-rename-file)
-        ("SPC n R" . denote-rename-file-using-front-matter)
+        ("SPC n s" . org-sparse-tree)
         ("SPC n t" . org-todo)))
 (with-eval-after-load 'evil
   (dolist (pair my/evil-org-binding)
@@ -261,17 +265,11 @@
 ;;                 ("plm" . "src plantuml\n@startmindmap")
 ;;                 ("pw" . "src powershell"))))
                                         ; org 主目录，也是很多东西被 organized 的主目录，简短仅次于根目录
-(setq org-roam-directory "~/orgroam")   ; roam 特别地需要一个目录
 (setq my/org-agenda-inbox "~/org/agenda/inbox.org") ; inbox.org 的路径
-(setq org-roam-database-connector 'sqlite)
 (setq org-startup-numerated t)          ; 设置 org 目录编号
 (setq org-confirm-babel-evaluate nil
       org-src-fontify-natively t
       org-src-tab-acts-natively t)
-(setq org-journal-file-type 'monthly)    ; 设置日记文件类型，每一个文件一个月，因为一年的文件太他妈大而卡死了
-;; (setq org-journal-file-format (concat "%Y-" chinese-year-now)) ; 把年份加入文件名
-(setq org-journal-date-format "%Y/%m/%d W%W D%j（%a）")
-(format-time-string "%Y/%m/%d W%W D%j (%a)")
 
 ;; 用于 Windows 的 Latex
 (setq temporary-file-directory "C:/Users/pilrymage/AppData/Local/Temp/")

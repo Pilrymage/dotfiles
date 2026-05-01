@@ -1,5 +1,11 @@
 ;;; modules/editor.el --- Editing enhancements -*- lexical-binding: t; -*-
 
+(use-package recentf
+    :config
+    (recentf-mode 1)
+    (setq recentf-max-saved-items 200)
+  )
+
 (use-package rime
   :defer t
   :bind (:map rime-mode-map
@@ -93,7 +99,9 @@
 (use-package evil-surround
   :ensure t
   :config
-  (global-evil-surround-mode 1))
+  (global-evil-surround-mode 1)
+  (add-to-list 'evil-surround-pairs-alist '(?$ . ("\\(" . "\\)"))))
+
 (use-package evil-commentary
   :ensure t
   :config
@@ -363,6 +371,10 @@
 
 (setq evil-shift-width 2)
 
+(defun my/jump-to-user-emacs-directory ()
+  (interactive)
+  (dired (concat user-emacs-directory "site-lisp")))
+
 (defun repeat-command (proc times)
   "Call PROC a total of TIMES."
   (dotimes (_ times)
@@ -449,8 +461,11 @@
     (keymap-set evil-motion-state-map "SPC h x" #'helpful-command)
     (keymap-set evil-motion-state-map "SPC h d" #'helpful-at-point)
     (keymap-set evil-motion-state-map "SPC h F" #'helpful-function)
+    (keymap-set evil-motion-state-map "SPC w" #'my/jump-to-user-emacs-directory)
     (keymap-set evil-motion-state-map "SPC r" #'recentf)
-    (keymap-set evil-motion-state-map "SPC `" #'vterm)))
+    (if (eq system-type 'windows-nt)
+        (keymap-set evil-motion-state-map "SPC `" #'eshell)
+        (keymap-set evil-motion-state-map "SPC `" #'vterm))))
 
 (use-package pangu-spacing
   :defer t

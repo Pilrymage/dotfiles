@@ -10,10 +10,10 @@
                          ("melpa"  . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 
 (dolist (path '("site-lisp"
-                "site-lisp/core"
-                "site-lisp/modules"
-                "site-lisp/lang"
-                "site-lisp/local"))
+                "site-lisp/01-core"
+                "site-lisp/02-modules"
+                "site-lisp/03-lang"
+                "site-lisp/04-local"))
   (add-to-list 'load-path (expand-file-name path user-emacs-directory)))
 
                                         ; core
