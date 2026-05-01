@@ -13,8 +13,9 @@
               ("`" . rime-inline-ascii))
   :custom
   (default-input-method "rime")
-  (rime-librime-root (expand-file-name "librime/dist" user-emacs-directory))
   :config
+  (if (eq system-type 'darwin)
+      (rime-librime-root (expand-file-name "librime/dist" user-emacs-directory)))
   (global-set-key (kbd "`") #'rime-inline-ascii)
   (setq rime-inline-ascii-holder ?x
         rime-share-data-dir (expand-file-name "rime" user-emacs-directory)

@@ -100,7 +100,7 @@
   (setq org-journal-file-type 'yearly)    ; 就要一年的
   (setq org-journal-date-format "%Y/%m/%d W%W D%j（%a）")
   (setq org-journal-dir "d:/github/notes.org")
-  (setq org-journal-file-format "%Y")
+  (setq org-journal-file-format "%Y.org")
   )
 (use-package org-noter
   :defer t)

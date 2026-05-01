@@ -22,7 +22,7 @@
               cursor-type 'hollow)
 
 (setq highlight-nonselected-windows nil)
-(setq system-time-locale "zh_CN")
+;; (setq system-time-locale "en_US")
 
 (setq initial-frame-alist '((top . 0.5)
                             (left . 0.5)
