@@ -1,14 +1,15 @@
 * Pilrymage 的个人配置
 
-使用 GNU Stow 启动，个人的 Linux 配置。
-参考：[[https://github.com/daviwil/dotfiles][daviwil]]。
+使用 chezmoi 启动，个人的 All in One 配置。
 
 * 使用方法
 #+begin_src bash
-$ git clone https://github.com/Pilrymage/dotfiles .dotfiles
-$ cd .dotfiles
-$ stow .
+  chezmoi init git@github.com:Pilrymage/dotfiles.org
+  chezmoi re-add . # 本地配置同步到 chezmoi
+  chezmoi update # 远程同步到 chezmoi
+  chezmoi apply # chezmoi 同步到本地配置
+  chezmoi git push origin # chezmoi 同步到远程
 #+end_src
 * 内容
-1. 大部分程序的仅大陆镜像配置
-2. 小部分作为个人配置存在
+1. ~.emacs.d~ ：一生的配置。
+2. 其他大多配置了一个国内镜像。
