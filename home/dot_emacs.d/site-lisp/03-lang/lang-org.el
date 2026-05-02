@@ -2,8 +2,6 @@
 
 ;; 
 (use-package org
-  :bind (("C-c r" . denote-dired-rename-files)
-         :map dired-mode-map)
   :hook (((org-babel-after-execute org-mode) . org-redisplay-inline-images) ; display image
          (visual-line-mode . org-mode))
   :config
@@ -22,7 +20,6 @@
      ("^\\( *[0-9]+[\\.)]\\) " 1 'org-level-1 prepend)
      )) ;; Ordered lists
   (setq org-modules nil
-        org-directory "~/org"
         org-todo-keywords
         '((sequence "TODO(t)" "DOING(i)" "HANGUP(h)" "|" "DONE(d)" "CANCEL(c)")
           (sequence "⚑(T)" "🏴(I)" "❓(H)" "|" "✔(D)" "✘(C)"))
@@ -99,7 +96,8 @@
   :config
   (setq org-journal-file-type 'yearly)    ; 就要一年的
   (setq org-journal-date-format "%Y/%m/%d W%W D%j（%a）")
-  (setq org-journal-dir "d:/github/notes.org")
+  (if (eq system-type 'windows-nt)(setq org-journal-dir "d:/github/notes.org"))
+  (if (eq system-type 'gnu/linux)(setq org-journal-dir "~/notes.org"))
   (setq org-journal-file-format "%Y.org")
   )
 (use-package org-noter
@@ -272,7 +270,8 @@
       org-src-tab-acts-natively t)
 
 ;; 用于 Windows 的 Latex
-(setq temporary-file-directory "C:/Users/pilrymage/AppData/Local/Temp/")
+(if (eq system-type 'windows-nt)
+    (setq temporary-file-directory "C:/Users/pilrymage/AppData/Local/Temp/"))
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
 (setq org-preview-latex-default-process 'imagemagick)
 (with-eval-after-load 'org
@@ -283,7 +282,7 @@
   ;; 2. 重新加入一个干净的、专为 xelatex 定制的 dvisvgm 节点
   (add-to-list 'org-preview-latex-process-alist
                '(imagemagick
-                 :programs ("xelatex" "magick" "gswin64c")
+                 :programs ("xelatex" "magick")
                  :description "pdf > png"
                  :message
                  "you need to install the programs: xelatex and imagemagick."

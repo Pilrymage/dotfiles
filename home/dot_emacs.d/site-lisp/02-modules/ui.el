@@ -18,8 +18,11 @@
   (window-divider-mode t))
 ;; Make sure new frames use window-divider
 (add-hook 'before-make-frame-hook 'window-divider-mode)
-(cond ((eq system-type 'gnu/linux) (setq default-frame-alist '((undecorated . t)))
-       (eq system-type 'darwin) (setq default-frame-alist '((ns-transparent-titlebar . t)))))
+
+(if (eq system-type 'gnu/linux)
+    (setq default-frame-alist '((undecorated . t))))
+(if (eq system-type 'darwin)
+    (setq default-frame-alist '((ns-transparent-titlebar . t))))
 
 
 (use-package emojify
