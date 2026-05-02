@@ -11,7 +11,7 @@
   :bind (:map rime-mode-map
               ("C-`" . rime-send-keybinding)
               ("`" . rime-inline-ascii))
-  :custom
+  :custom 
   (default-input-method "rime")
   :config
   ;; macOS 自行下载 librime
@@ -25,7 +25,6 @@
       (setq rime-emacs-module-header-root "~/scoop/apps/emacs/current/include/")) 
   (global-set-key (kbd "`") #'rime-inline-ascii)
   (setq rime-inline-ascii-holder ?x
-        rime-share-data-dir (expand-file-name "rime" user-emacs-directory)
         rime-user-data-dir (expand-file-name "rime" user-emacs-directory)))
 
 (defvar +evil-want-o/O-to-continue-comments t
