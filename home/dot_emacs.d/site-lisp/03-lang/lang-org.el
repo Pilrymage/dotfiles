@@ -245,7 +245,9 @@
         ("SPC n p" . org-download-clipboard)
         ("SPC n q" . org-set-tags-command)
         ("SPC n s" . org-sparse-tree)
-        ("SPC n t" . org-todo)))
+        ("SPC n t" . org-todo)
+        ("SPC n ." . org-timestamp)
+        ))
 (with-eval-after-load 'evil
   (dolist (pair my/evil-org-binding)
     (evil-define-key 'normal org-mode-map (kbd (car pair)) (cdr pair))))
@@ -294,7 +296,19 @@
 
 (modify-syntax-entry ?> "w" org-mode-syntax-table)
 (modify-syntax-entry ?> "w" org-mode-syntax-table)
-
+(defun my/org-git-sync-silent ()
+  (interactive)
+  (let ((org-dir "~/notes.org"))
+    (when (file-directory-p org-dir)
+      (let ((default-directory org-dir))
+        (unless (string-empty-p (shell-command-to-string "git status -s"))
+          (message "Org-sync: 发现变动，正在后台同步……")
+          (shell-command
+           (format "git add . && git commit -m 'Auto-sync：%s' && git push &"
+                   (format-time-string "%Y-%m-%d %H:%M:%S")))
+          (message "Org-sync: 同步任务已启动"))))))
+(run-at-time "1 min" 900 'my/org-git-sync-silent)
+(add-hook 'kill-emacs-hook 'my/org-git-sync-silent)
 (provide 'init-org)
 ;; Babel
 
