@@ -2,6 +2,16 @@
 
 (require 'subr-x)
 
+(use-package treesit-auto
+  :custom
+  ;; 将 Tree-sitter 高亮级别开到最大（默认是 3）
+  ;; 级别 4 会包含变量、属性、甚至部分标点符号的极致高亮，这正是你需要的！
+  (treesit-font-lock-level 4)
+  :config
+  ;; 启用全局的 treesit-auto
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+
 ;; ansible
 (use-package ansible
   :defer t)
@@ -187,6 +197,8 @@
   :defer t
   :straight (:host github :repo "manateelazycat/flex" :files ("*.el")))
 (use-package anki-editor :defer t)
+
+
 (provide 'general)
 
 ;;; lang/general.el ends here

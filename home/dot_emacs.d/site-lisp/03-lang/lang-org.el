@@ -9,7 +9,16 @@
 
   ;; Apply the custom face to unordered and ordered list markers
   (with-eval-after-load 'org
-    (define-key org-mode-map (kbd "SPC") nil))
+    (define-key org-mode-map (kbd "SPC") nil)
+    (add-to-list 'org-src-lang-modes '("python" . python-ts))
+    (add-to-list 'org-src-lang-modes '("c" . c-ts))
+    (add-to-list 'org-src-lang-modes '("cpp" . c++-ts))
+    (add-to-list 'org-src-lang-modes '("json" . json-ts))
+    (add-to-list 'org-src-lang-modes '("java" . java-ts))
+    (add-to-list 'org-src-lang-modes '("js" . js-ts))
+    (add-to-list 'org-src-lang-modes '("javascript" . js-ts))
+    (add-to-list 'org-src-lang-modes '("rust" . rust-ts))
+    (add-to-list 'org-src-lang-modes '("bash" . bash-ts)))
 
 
   ;; 在 org mode 中添加无序列表和有序列表的颜色
@@ -91,13 +100,16 @@
   :defer t)
 (use-package gnuplot-mode
   :defer t)
+
+
+(if (eq system-type 'windows-nt) (setq my/org-notes-repository "D:/github/notes.org"))
+(if (eq system-type 'gnu/linux) (setq my/org-notes-repository "~/notes.org"))
 (use-package org-journal
   :ensure t
   :config
   (setq org-journal-file-type 'yearly)    ; 就要一年的
   (setq org-journal-date-format "%Y/%m/%d W%W D%j（%a）")
-  (if (eq system-type 'windows-nt)(setq org-journal-dir "d:/github/notes.org"))
-  (if (eq system-type 'gnu/linux)(setq org-journal-dir "~/notes.org"))
+  (setq org-journal-dir my/org-notes-repository)
   (setq org-journal-file-format "%Y.org")
   )
 (use-package org-noter
@@ -248,6 +260,7 @@
         ("SPC n s" . org-sparse-tree)
         ("SPC n t" . org-todo)
         ("SPC n ." . org-timestamp)
+        ("SPC n '" . org-edit-special)
         ))
 (with-eval-after-load 'evil
   (dolist (pair my/evil-org-binding)
@@ -274,8 +287,7 @@
 
                                         ; org 主目录，也是很多东西被 organized 的主目录，简短仅次于根目录
 (setq my/org-agenda-inbox "~/org/agenda/inbox.org") ; inbox.org 的路径
-(if (eq system-type 'windows-nt)
-    (setq org-agenda-files '("D:/github/notes.org/")))
+(setq org-agenda-files '(my/org-notes-repository))
 (setq org-startup-numerated t)          ; 设置 org 目录编号
 (setq org-confirm-babel-evaluate nil
       org-src-fontify-natively t
@@ -308,16 +320,24 @@
 (modify-syntax-entry ?> "w" org-mode-syntax-table)
 
 (defun my/org-git-sync-silent ()
+  "检查 Org 笔记目录是否有变动，如果有则执行静默提交和推送 (Windows 兼容版)。"
   (interactive)
-  (let ((org-dir "~/notes.org"))
+  ;; *** 请将这里的路径替换为你的实际 Windows 路径 ***
+  ;; 注意：在 Emacs 中表示 Windows 路径，请务必使用正斜杠 "/" 而不是反斜杠 "\"
+  (let ((org-dir my/org-notes-repository)) 
     (when (file-directory-p org-dir)
       (let ((default-directory org-dir))
         (unless (string-empty-p (shell-command-to-string "git status -s"))
-          (message "Org-sync: 发现变动，正在后台同步……")
-          (shell-command
-           (format "git add . && git commit -m 'Auto-sync：%s' && git push &"
+          (message "Org-sync: 发现变动，正在后台同步...")
+          (start-process-shell-command
+           "org-git-sync-process" ;; 进程的内部名称
+           nil                    ;; 不需要输出到任何 Buffer
+           (format "git add . && git commit -m \"Auto-sync: %s\" && git push"
                    (format-time-string "%Y-%m-%d %H:%M:%S")))
+          
           (message "Org-sync: 同步任务已启动"))))))
+
+;; 定时器设置保持不变
 (run-at-time "1 min" 900 'my/org-git-sync-silent)
 (add-hook 'kill-emacs-hook 'my/org-git-sync-silent)
 
