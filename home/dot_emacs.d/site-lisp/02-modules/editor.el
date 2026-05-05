@@ -1,9 +1,9 @@
 ;;; modules/editor.el --- Editing enhancements -*- lexical-binding: t; -*-
 
 (use-package recentf
-    :config
-    (recentf-mode 1)
-    (setq recentf-max-saved-items 200)
+  :config
+  (recentf-mode 1)
+  (setq recentf-max-saved-items 200)
   )
 
 (use-package rime
@@ -11,7 +11,7 @@
   :bind (:map rime-mode-map
               ("C-`" . rime-send-keybinding)
               ("`" . rime-inline-ascii))
-  :custom
+  :custom 
   (default-input-method "rime")
   :config
   ;; macOS 自行下载 librime
@@ -445,14 +445,14 @@
     (let* ((key (car pair))
            (fn (cdr pair))
            (resolved (if (and (eq fn 'org-kill-line)
-                               (not (fboundp 'org-kill-line)))
+                              (not (fboundp 'org-kill-line)))
                          #'kill-line
                        fn)))
       (evil-global-set-key 'insert (kbd key) resolved)))
   (when (boundp 'evil-motion-state-map)
     (keymap-set evil-motion-state-map "SPC" nil)
     (keymap-set evil-motion-state-map "SPC 0" #'restart-emacs)
-    (keymap-set evil-motion-state-map "SPC b" #'ibuffer)
+    (keymap-set evil-motion-state-map "SPC b" #'previous-buffer)
     (keymap-set evil-motion-state-map "SPC d" #'dired)
     (keymap-set evil-motion-state-map "SPC e" #'elfeed)
     (keymap-set evil-motion-state-map "SPC f" #'find-file)
@@ -472,7 +472,7 @@
     (keymap-set evil-motion-state-map "SPC r" #'recentf)
     (if (eq system-type 'windows-nt)
         (keymap-set evil-motion-state-map "SPC `" #'eshell)
-        (keymap-set evil-motion-state-map "SPC `" #'vterm))))
+      (keymap-set evil-motion-state-map "SPC `" #'vterm))))
 
 (use-package pangu-spacing
   :defer t
@@ -489,15 +489,15 @@
 (global-set-key (kbd "<f8>") #'execute-extended-command)
 (electric-pair-mode 1)
 (with-eval-after-load 'electric-pair
-(setq electric-pair-pairs '((?\" . ?\")
-                            (?\` . ?\`)
-                            (?\( . ?\))
-                            (?\[ . ?\])
-                            (?\{ . ?\})
-                            (?\【 . ?\】)
-                            (?\「 . ?\」)
-                            (?\《 . ?\》)
-                            (?\（ . ?\）))))
+  (setq electric-pair-pairs '((?\" . ?\")
+                              (?\` . ?\`)
+                              (?\( . ?\))
+                              (?\[ . ?\])
+                              (?\{ . ?\})
+                              (?\【 . ?\】)
+                              (?\「 . ?\」)
+                              (?\《 . ?\》)
+                              (?\（ . ?\）))))
 (setq show-paren-style 'mixed)
 (setopt show-paren-context-when-offscreen t
         blink-matching-paren-highlight-offscreen t)

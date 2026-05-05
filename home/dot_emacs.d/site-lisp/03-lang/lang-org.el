@@ -236,7 +236,8 @@
   :hook (org-mode . org-fragtog-mode))
 (setq my/evil-org-binding
       '(("SPC n a" . org-toggle-narrow-to-subtree)
-        ("SPC n A" . org-tree-to-indirect-buffer)
+        ("SPC n A" . org-agenda)
+        ("SPC n b" . org-tree-to-indirect-buffer)
         ("SPC n c" . org-cliplink)
         ("SPC n C" . org-capture)
         ("SPC n f" . org-footnote-new)
@@ -245,27 +246,34 @@
         ("SPC n p" . org-download-clipboard)
         ("SPC n q" . org-set-tags-command)
         ("SPC n s" . org-sparse-tree)
-        ("SPC n t" . org-todo)
-        ("SPC n ." . org-timestamp)
-        ))
+        ("SPC n t" . org-todo)))
 (with-eval-after-load 'evil
   (dolist (pair my/evil-org-binding)
     (evil-define-key 'normal org-mode-map (kbd (car pair)) (cdr pair))))
 
 (setq org-startup-numerated t)          ; 设置 org 目录编号
-;; (setq org-tempo-keywords-alist ; org 模板，其他语言
-;;       (append org-tempo-keywords-alist
-;;               '(("el" . "src emacs-lisp")
-;;                 ("sh" . "src bash")
-;;                 ("py" . "src python :results output")
-;;                 ("fi" . "src fish")
-;;                 ("js" . "src javascript")
-;;                 ("cc" . "src c")
-;;                 ("cp" . "src cpp")
-;;                 ("plm" . "src plantuml\n@startmindmap")
-;;                 ("pw" . "src powershell"))))
+(setq org-structure-template-alist ; org 模板，其他语言
+      (append org-structure-template-alist
+              '(("el" . "src emacs-lisp")
+                ("sh" . "src bash")
+                ("py" . "src python :results output")
+                ("fi" . "src fish")
+                ("js" . "src javascript")
+                ("cc" . "src c")
+                ("ru" . "src rust")
+                ("cp" . "src cpp")
+                ("plm" . "src plantuml\n@startmindmap")
+                ("pw" . "src powershell"))))
+(add-hook 'org-mode-hook
+          (lambda ()
+            (setq-local electric-pair-inhibit-predicate
+                        (lambda (c)
+                          (if (char-equal c ?<) t (electric-pair-default-inhibit c))))))
+
                                         ; org 主目录，也是很多东西被 organized 的主目录，简短仅次于根目录
 (setq my/org-agenda-inbox "~/org/agenda/inbox.org") ; inbox.org 的路径
+(if (eq system-type 'windows-nt)
+    (setq org-agenda-files '("D:/github/notes.org/")))
 (setq org-startup-numerated t)          ; 设置 org 目录编号
 (setq org-confirm-babel-evaluate nil
       org-src-fontify-natively t
@@ -296,19 +304,7 @@
 
 (modify-syntax-entry ?> "w" org-mode-syntax-table)
 (modify-syntax-entry ?> "w" org-mode-syntax-table)
-(defun my/org-git-sync-silent ()
-  (interactive)
-  (let ((org-dir "~/notes.org"))
-    (when (file-directory-p org-dir)
-      (let ((default-directory org-dir))
-        (unless (string-empty-p (shell-command-to-string "git status -s"))
-          (message "Org-sync: 发现变动，正在后台同步……")
-          (shell-command
-           (format "git add . && git commit -m 'Auto-sync：%s' && git push &"
-                   (format-time-string "%Y-%m-%d %H:%M:%S")))
-          (message "Org-sync: 同步任务已启动"))))))
-(run-at-time "1 min" 900 'my/org-git-sync-silent)
-(add-hook 'kill-emacs-hook 'my/org-git-sync-silent)
+
 (provide 'init-org)
 ;; Babel
 
