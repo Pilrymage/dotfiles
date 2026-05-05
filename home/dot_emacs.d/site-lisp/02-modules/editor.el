@@ -11,7 +11,7 @@
   :bind (:map rime-mode-map
               ("C-`" . rime-send-keybinding)
               ("`" . rime-inline-ascii))
-  :custom 
+  :custom
   (default-input-method "rime")
   :config
   ;; macOS 自行下载 librime
