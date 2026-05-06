@@ -332,7 +332,7 @@
           (start-process-shell-command
            "org-git-sync-process" ;; 进程的内部名称
            nil                    ;; 不需要输出到任何 Buffer
-           (format "git add . && git commit -m \"Auto-sync: %s\" && git push"
+           (format "git pull && git add . && git commit -m \"Auto-sync: %s\" && git push"
                    (format-time-string "%Y-%m-%d %H:%M:%S")))
           
           (message "Org-sync: 同步任务已启动"))))))
