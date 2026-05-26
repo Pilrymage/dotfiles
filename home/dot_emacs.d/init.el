@@ -29,12 +29,19 @@
 (require 'apps)
 
                                         ; lang
-(require 'general)
+(require 'lang-general)
 (require 'lang-org)
 
                                         ; local
 (require 'chord-highlight)
+(require 'org-wc-diff)
+(require 'send-to-emacs)
+(setq org-wc-diff-tracked-files '("D:/github/notes.org/2026.org"))
+(global-org-wc-diff-mode 1)
 
 (message "emacs init time %s" (emacs-init-time))
 
 ;;; init.el ends here
+
+(load-file (let ((coding-system-for-read 'utf-8))
+             (shell-command-to-string "agda-mode.exe locate")))

@@ -9,7 +9,13 @@
 
   ;; Apply the custom face to unordered and ordered list markers
   (with-eval-after-load 'org
-    (define-key org-mode-map (kbd "SPC") nil)
+    (defvar org-hide-space-keywords
+      '(("\\cc\\( \\)[*/_=~+]\\cc.*?[*/_=~+]"
+         (0 (prog1 () (when org-hide-emphasis-markers (add-text-properties (match-beginning 1) (match-end 1) '(invisible t))))))
+        ("[*/_=~+].*?\\cc[*/_=~+]\\( \\)\\cc"
+         (0 (prog1 () (when org-hide-emphasis-markers (add-text-properties (match-beginning 1) (match-end 1) '(invisible t))))))))
+    (font-lock-add-keywords 'org-mode org-hide-space-keywords 'append)
+    ;; (define-key org-mode-map (kbd "SPC") nil)
     (add-to-list 'org-src-lang-modes '("python" . python-ts))
     (add-to-list 'org-src-lang-modes '("c" . c-ts))
     (add-to-list 'org-src-lang-modes '("cpp" . c++-ts))
@@ -238,7 +244,6 @@
   :config
   ;; 这一行必须为 t，否则 org-appear 不会工作
   (setq org-hide-emphasis-markers t)
-  
   ;; 以下设置为可选，开启更多自动展开功能
   (setq org-appear-autoentities t)  ; 光标进入时展开 HTML 实体，如 \alpha
   (setq org-appear-autolinks t)     ; 光标进入链接描述时，展开显示完整的 URL
@@ -246,25 +251,9 @@
 (use-package org-fragtog
   :ensure t
   :hook (org-mode . org-fragtog-mode))
-(setq my/evil-org-binding
-      '(("SPC n a" . org-toggle-narrow-to-subtree)
-        ("SPC n A" . org-agenda)
-        ("SPC n b" . org-tree-to-indirect-buffer)
-        ("SPC n c" . org-cliplink)
-        ("SPC n C" . org-capture)
-        ("SPC n f" . org-footnote-new)
-        ("SPC n g" . org-goto)
-        ("SPC n i" . org-insert-link)
-        ("SPC n p" . org-download-clipboard)
-        ("SPC n q" . org-set-tags-command)
-        ("SPC n s" . org-sparse-tree)
-        ("SPC n t" . org-todo)
-        ("SPC n ." . org-timestamp)
-        ("SPC n '" . org-edit-special)
-        ))
-(with-eval-after-load 'evil
-  (dolist (pair my/evil-org-binding)
-    (evil-define-key 'normal org-mode-map (kbd (car pair)) (cdr pair))))
+
+(use-package org-super-links
+  :straight (org-super-links :type git :host github :repo "toshism/org-super-links" :branch "develop"))
 
 (setq org-startup-numerated t)          ; 设置 org 目录编号
 (setq org-structure-template-alist ; org 模板，其他语言
@@ -287,7 +276,7 @@
 
                                         ; org 主目录，也是很多东西被 organized 的主目录，简短仅次于根目录
 (setq my/org-agenda-inbox "~/org/agenda/inbox.org") ; inbox.org 的路径
-(setq org-agenda-files '(my/org-notes-repository))
+(setq org-agenda-files `(,my/org-notes-repository))
 (setq org-startup-numerated t)          ; 设置 org 目录编号
 (setq org-confirm-babel-evaluate nil
       org-src-fontify-natively t
@@ -338,7 +327,7 @@
           (message "Org-sync: 同步任务已启动"))))))
 
 ;; 定时器设置保持不变
-(run-at-time "1 min" 900 'my/org-git-sync-silent)
+(run-at-time "1 min" 1200 'my/org-git-sync-silent)
 (add-hook 'kill-emacs-hook 'my/org-git-sync-silent)
 
 (provide 'init-org)

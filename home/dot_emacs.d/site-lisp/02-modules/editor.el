@@ -6,13 +6,61 @@
   (setq recentf-max-saved-items 200)
   )
 
+(defun my/org-timer-record-and-stop-and-done ()
+  (interactive)
+  (org-timer)
+  (org-timer-stop)
+  (org-todo 'done))
+
+(defun my/org-clock-out-and-done ()
+  (interactive)
+  (org-clock-out)
+  (org-todo 'done))
+(use-package general
+  :config
+  ;; 1. 为 Org mode 创建一个专用的定义器
+  (general-create-definer my/org-leader-def
+    :keymaps 'org-mode-map
+    :states 'normal
+    :prefix "SPC n")
+
+  ;; 2. 直接使用该定义器绑定功能
+  (my/org-leader-def
+    "a" 'org-toggle-narrow-to-subtree
+    "A" 'org-agenda
+    "b" 'org-tree-to-indirect-buffer
+    "c" 'org-cliplink
+    "C" 'org-capture
+    "f" 'org-footnote-new
+    "g" 'org-goto
+    "i" 'org-super-links-insert-link
+    "I" 'org-clock-in
+    "O" 'my/org-clock-out-and-done
+    "p" 'org-download-clipboard
+    "q" 'org-set-tags-command
+    "s" 'org-super-links-store-link
+    "S" 'org-sparse-tree
+    "t" 'org-todo
+    "T" 'org-timestamp
+    "," 'org-timer-pause-or-continue
+    "." 'org-timer
+    "0" 'org-timer-start
+    "_" 'my/org-timer-record-and-stop-and-done
+    "'" 'org-edit-special
+    "RET" 'org-ctrl-c-ret
+    "TAB" 'org-ctrl-c-tab
+    "*" 'org-ctrl-c-star
+    "-" 'org-ctrl-c-minus
+    ;; 绑定子命令图（Command Map）
+    "r" 'verb-command-map))
+
 (use-package rime
   :defer t
+  :custom
+  (default-input-method "rime")
   :bind (:map rime-mode-map
               ("C-`" . rime-send-keybinding)
               ("`" . rime-inline-ascii))
-  :custom
-  (default-input-method "rime")
   :config
   ;; macOS 自行下载 librime
   (if (eq system-type 'darwin) 
@@ -432,6 +480,7 @@
     ("C-f" . forward-char)
     ("C-b" . backward-char)
     ("C-a" . beginning-of-line)
+    ("C-d" . org-delete-char)
     ("C-e" . end-of-line)
     ("C-u" . nil)
     ("C-k" . org-kill-line))
@@ -458,18 +507,20 @@
     (keymap-set evil-motion-state-map "SPC f" #'find-file)
     (keymap-set evil-motion-state-map "SPC F" #'toggle-frame-fullscreen)
     (keymap-set evil-motion-state-map "SPC g" #'magit)
-    (keymap-set evil-motion-state-map "SPC j" #'org-journal-new-entry)
-    (keymap-set evil-motion-state-map "SPC m s" #'bookmark-set)
-    (keymap-set evil-motion-state-map "SPC m l" #'list-bookmarks)
-    (keymap-set evil-motion-state-map "SPC m j" #'bookmark-jump)
     (keymap-set evil-motion-state-map "SPC h f" #'helpful-callable)
     (keymap-set evil-motion-state-map "SPC h v" #'helpful-variable)
     (keymap-set evil-motion-state-map "SPC h k" #'helpful-key)
     (keymap-set evil-motion-state-map "SPC h x" #'helpful-command)
     (keymap-set evil-motion-state-map "SPC h d" #'helpful-at-point)
     (keymap-set evil-motion-state-map "SPC h F" #'helpful-function)
-    (keymap-set evil-motion-state-map "SPC w" #'my/jump-to-user-emacs-directory)
+    (keymap-set evil-motion-state-map "SPC j" #'org-journal-new-entry)
+    (keymap-set evil-motion-state-map "SPC J" #'org-journal-open-current-journal-file)
+    (keymap-set evil-motion-state-map "SPC m s" #'bookmark-set)
+    (keymap-set evil-motion-state-map "SPC m l" #'list-bookmarks)
+    (keymap-set evil-motion-state-map "SPC m j" #'bookmark-jump)
+    (keymap-set evil-motion-state-map "SPC q" #'scratch-buffer)
     (keymap-set evil-motion-state-map "SPC r" #'recentf)
+    (keymap-set evil-motion-state-map "SPC w" #'my/jump-to-user-emacs-directory)
     (if (eq system-type 'windows-nt)
         (keymap-set evil-motion-state-map "SPC `" #'eshell)
       (keymap-set evil-motion-state-map "SPC `" #'vterm))))
@@ -501,6 +552,7 @@
 (setq show-paren-style 'mixed)
 (setopt show-paren-context-when-offscreen t
         blink-matching-paren-highlight-offscreen t)
+(setq-default fill-column 80)
 (provide 'editor)
 
 ;;; modules/editor.el ends here
