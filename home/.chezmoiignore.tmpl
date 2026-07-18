@@ -1,8 +1,32 @@
-# 非 Windows 下忽略这些仅 Windows 用到的目标
+# Windows 专属目标
 {{ if ne .chezmoi.os "windows" -}}
 AppData/**
 Documents/PowerShell/**
 Documents/WindowsPowerShell/**
 .chezmoiscripts/windows/**
 scoop/**
+.wslconfig
+.config/windows-terminal/**
+{{- end }}
+
+# macOS 专属目标；Rime 的 Library/Rime 入口也在这里。
+{{ if ne .chezmoi.os "darwin" -}}
+Library/**
+.config/karabiner/**
+.config/linearmouse/**
+.config/navidrome/**
+.cabal/**
+.cpan/**
+.zshrc
+{{- end }}
+
+# 当前这些配置包含 Linux 专属的 systemd、Guix、fcitx5 与设备路径。
+{{ if ne .chezmoi.os "linux" -}}
+.bashrc
+.config/bash/**
+.config/guix/**
+.config/kanata/**
+.config/neofetch/**
+.config/systemd/**
+.local/share/fcitx5/**
 {{- end }}

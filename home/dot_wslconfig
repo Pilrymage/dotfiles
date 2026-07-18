@@ -1,0 +1,8 @@
+[wsl2]
+autoProxy=true
+dnsTunneling=true
+# 强行限制 WSL2 最多只能吃 4GB 内存（根据你的总内存调整，建议设为总内存的 1/4 或 1/3）
+memory=4GB
+
+# 核心魔法：让 WSL2 自动且激进地把 Linux 缓存的内存释放还给 Windows
+autoMemoryReclaim=dropcache

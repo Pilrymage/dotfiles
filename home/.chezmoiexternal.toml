@@ -1,0 +1,4 @@
+[".emacs.d"]
+    type = "git-repo"
+    url = "git@github.com:Pilrymage/.emacs.d.git"
+    refreshPeriod = "168h"

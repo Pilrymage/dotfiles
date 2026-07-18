@@ -1,0 +1,5 @@
+[Environment]::SetEnvironmentVariable("CARGO_HOME", "{{ joinPath .chezmoi.homeDir ".cargo" }}", "User")
+[Environment]::SetEnvironmentVariable("RUSTUP_HOME", "{{ joinPath .chezmoi.homeDir ".rustup" }}", "User")
+[Environment]::SetEnvironmentVariable("XDG_CONFIG_HOME", "{{ joinPath .chezmoi.homeDir ".config" }}", "User")
+[Environment]::SetEnvironmentVariable("XDG_DATA_HOME", "{{ joinPath .chezmoi.homeDir ".local" "share" }}", "User")
+[Environment]::SetEnvironmentVariable("XDG_CACHE_HOME", "{{ joinPath .chezmoi.homeDir ".cache" }}", "User")

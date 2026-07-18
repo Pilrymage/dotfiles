@@ -1,20 +1,7 @@
-; Emacs 的配置
-; doom 的一些遗留
-.doom.d/custom.el
-.emacs.d/straight/build/
-.emacs.d/straight/repos/
-.emacs.d/straight/modified/
-.emacs.d/straight/build-cache.el
-.emacs.d.bak/straight/build/
-.emacs.d.bak/straight/repos/
-.emacs.d.bak/straight/modified/
-.emacs.d.bak/straight/build-cache.el
-
-; OBS 配置是什么
-.files/.config/obs-studio
-
-; 背景
-backgrounds
-
-/.config/qBittorrent
-/.config/karabiner/automatic_backups/
+# 本机状态和可能包含凭据的目录不得直接 re-add 到源目录。
+secrets/
+private/
+backgrounds/
+dot_config/obs-studio/
+dot_config/qBittorrent/
+dot_config/karabiner/automatic_backups/

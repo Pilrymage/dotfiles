@@ -1,3 +1,18 @@
 * text=auto
 *.sh text eol=lf
+dot_bashrc text eol=lf
+dot_zshrc text eol=lf
+dot_config/bash/** text eol=lf
+*.lua text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
 *.bat text eol=crlf
+*.ps1 text eol=crlf
+*.ps1.tmpl text eol=crlf
+*.exe binary
+*.otf binary
+*.ttf binary
+*.gram binary
+**/ziggy-linux binary
+**/ziggy-darwin binary
