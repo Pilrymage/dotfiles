@@ -1,0 +1,19 @@
+# This is just an example! Please see available options to customize Navidrome at
+# https://www.navidrome.org/docs/usage/configuration-options/#available-options
+
+LogLevel = 'info'
+ScanSchedule = '@every 24h'
+TranscodingCacheSize = '150MiB'
+MusicFolder = '/Users/pilrymage/Shared/Torrent/mu'
+DataFolder = '/Users/pilrymage/.config/navidrome/data'
+
+# This is the default path for Homebrew installed ffmpeg
+FFmpegPath = '/usr/local/bin/ffmpeg'
+
+DefaultLanguage = 'zh-Hans'
+LastFM.Enabled = true
+LastFM.ApiKey = {{ env "ND_LASTFM_APIKEY" | quote }}
+LastFM.Secret = {{ env "ND_LASTFM_SECRET" | quote }}
+Spotify.ID = {{ env "ND_SPOTIFY_ID" | quote }}
+Spotify.Secret = {{ env "ND_SPOTIFY_SECRET" | quote }}
+
